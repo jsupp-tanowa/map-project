@@ -1,0 +1,508 @@
+body {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ヘッダー */
+.app-header{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+
+  height:72px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  z-index:1000;
+
+  color:white;
+
+  font-family:"M PLUS 1p",sans-serif;
+
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+
+  background: repeating-linear-gradient(
+    90deg,
+    #1b5e20 0px,
+    #1b5e20 22px,
+    #388e3c 22px,
+    #388e3c 44px
+  );
+}
+
+.title{
+  font-size:24px;
+  font-weight:800;
+  line-height:1;
+}
+
+.subtitle{
+  margin-top:4px;
+  font-size:11px;
+  font-weight:400;
+  opacity:.9;
+  letter-spacing:.5px;
+}
+
+/* 地図 */
+#map {
+  width:100%;
+  height:calc(100dvh - 210px);
+  margin-top:130px;
+}
+
+/* 現在地ボタン */
+.button-area {
+  position: absolute;
+  bottom: 90px;
+  right: 10px;
+  z-index: 999;
+}
+
+.location-btn {
+  padding: 0;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+button {
+  font-size: 18px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+
+/* ①地図移動コントロール非表示 */
+.gm-bundled-control,
+.gm-svpc {
+  display: none !important;
+}
+
+/* Google InfoWindow */
+.gm-style .gm-style-iw {
+  font-size: 18px !important;
+  line-height: 1.7;
+  max-width: 260px;
+}
+
+/* スマホ向け */
+@media (max-width: 768px) {
+  .gm-style .gm-style-iw {
+    font-size: 20px !important;
+  }
+  button {
+    font-size: 20px;
+    padding: 14px 18px;
+  }
+}
+
+/* 検索バー（固定表示） */
+.search-bar-fixed {
+  position: absolute;
+  top: 72px;
+  left: 10px;
+  right: 10px;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.search-bar-inner {
+  position: relative;
+}
+
+.search-bar-fixed input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: none;
+  border-radius: 25px;
+  box-sizing: border-box;
+  font-size: 16px;
+  -webkit-appearance: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #bbb;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  padding: 0;
+  line-height: 26px;
+  text-align: center;
+  color: white;
+  display: none;
+  box-shadow: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* フィルター */
+.filter-area {
+  position: absolute;
+  top: 125px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  z-index: 999;
+  padding-bottom: 5px;
+}
+
+.filter-area button {
+  flex: 0 0 auto;
+  background: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+/* 下タブ */
+.tab-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+  box-shadow: 0 -2px 10px rgba(0,0,0,.2);
+  background: repeating-linear-gradient(
+    90deg,
+    #1b5e20 0px,
+    #1b5e20 22px,
+    #388e3c 22px,
+    #388e3c 44px
+  );
+}
+
+.tab-item {
+  text-align: center;
+  font-size: 13px;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  font-family: "Zen Kaku Gothic New", sans-serif;
+  font-weight: 700;
+}
+
+.tab-item:active {
+  transform: scale(.95);
+}
+
+.tab-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* 店舗カード */
+.bottom-sheet {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 80px;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  padding: 16px;
+  z-index: 999;
+  box-shadow: 0 -2px 15px rgba(0,0,0,.2);
+  max-height: 70vh;
+  overflow-y: auto;
+  transition: .3s;
+  touch-action: none;
+}
+
+.bottom-sheet.open {
+  height: 70vh;
+}
+
+/* 取っ手 */
+.drag-handle {
+  width: 50px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 20px;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+/* 店舗カード内 */
+.bottom-title {
+  font-size: 28px;
+  font-family: "M PLUS 1p", sans-serif;
+  font-weight: 900;
+  color: #222;
+}
+
+.bottom-info {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.8;
+  font-family: "M PLUS 1p", sans-serif;
+  color: #555;
+}
+
+.detail-btn {
+  position: sticky;
+  bottom: 0;
+  margin-top: 12px;
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* 周辺表示ボタン */
+.show-area-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: "M PLUS 1p", sans-serif;
+  font-weight: 700;
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1.5px solid #a5d6a7;
+  border-radius: 12px;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 16px;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 50%;
+  color: #888;
+  z-index: 1000;
+}
+
+.shop-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background: #eee;
+}
+
+/* 出発地セット行 */
+.origin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 4px;
+  padding: 8px 12px;
+  background: #f0f7ff;
+  border-radius: 10px;
+}
+
+.origin-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-family: "M PLUS 1p", sans-serif;
+  color: #333;
+  cursor: pointer;
+}
+
+.origin-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4285F4;
+  cursor: pointer;
+}
+
+
+/* カード内アクション行（保存ボタン） */
+.card-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+/* 出発地ボタン（保存ボタンと高さ・フォントを揃える） */
+.origin-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #f0f7ff;
+  color: #2c5f9e;
+  border: 1px solid #b3d4f5;
+  cursor: pointer;
+  font-family: "M PLUS 1p", sans-serif;
+  user-select: none;
+  box-shadow: none;
+  line-height: 1;
+}
+
+.origin-toggle-btn input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #4285F4;
+  cursor: pointer;
+  margin: 0;
+}
+
+.origin-toggle-btn.active {
+  background: #bbdefb;
+  color: #1a3f6f;
+  border-color: #90caf9;
+}
+
+.save-toggle-btn {
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #fff8e1;
+  color: #b8860b;
+  box-shadow: none;
+  border: 1px solid #f0d98c;
+}
+
+.save-toggle-btn.saved {
+  background: #ffd54f;
+  color: #7a5c00;
+  border-color: #ffd54f;
+}
+
+/* 保存リスト画面 */
+.saved-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.saved-header {
+  position: relative;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    90deg,
+    #1b5e20 0px,
+    #1b5e20 22px,
+    #388e3c 22px,
+    #388e3c 44px
+  );
+  color: white;
+  flex-shrink: 0;
+}
+
+.saved-title {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: "M PLUS 1p", sans-serif;
+}
+
+.saved-header .close-btn {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 28px;
+}
+
+.saved-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 16px;
+}
+
+.saved-empty {
+  text-align: center;
+  color: #999;
+  margin-top: 60px;
+  font-family: "M PLUS 1p", sans-serif;
+}
+
+.saved-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.saved-item-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.saved-item-icon {
+  font-size: 20px;
+}
+
+.saved-item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.saved-item-name {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "M PLUS 1p", sans-serif;
+  color: #222;
+}
+
+.saved-item-sub {
+  font-size: 12px;
+  color: #888;
+}
+
+.saved-item-remove {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: #f5f5f5;
+  color: #999;
+  box-shadow: none;
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <title>サポたのわ（β版）</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="app-header">
+  <div class="title">サポたのわ（β版）</div>
+  <div class="subtitle">
+    サポーターで食べ飲み話す～楽しい美味しいお店の輪
+  </div>
+</header>
+
+  <!-- 検索バー（固定表示） -->
+  <div class="search-bar-fixed">
+    <div class="search-bar-inner">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="スタジアム名・クラブ名・地域検索">
+      <button id="searchClearBtn" class="search-clear-btn">×</button>
+    </div>
+  </div>
+
+
+  <!-- フィルター -->
+  <!--
+  <div class="filter-area">
+    <button>ごはんや</button>
+    <button>居酒屋</button>
+    <button>バー</button>
+  </div>
+　-->
+  
+  <!-- 現在地ボタン -->
+  <div class="button-area">
+    <button onclick="moveToCurrentLocation()" class="location-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" fill="#4285F4"/>
+        <circle cx="12" cy="12" r="8" fill="none" stroke="#4285F4" stroke-width="2" opacity="0.4"/>
+        <line x1="12" y1="2" x2="12" y2="6" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="18" x2="12" y2="22" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="2" y1="12" x2="6" y2="12" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="12" x2="22" y2="12" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 地図 -->
+  <div id="map"></div>
+
+  <!-- 店舗カード -->
+  <div id="shopCard" class="bottom-sheet" style="display:none;">
+    <div class="drag-handle"></div>
+    <button id="closeCardBtn" class="close-btn">×</button>
+    <img id="shopImage" class="shop-image" src="">
+    <div id="shopName" class="bottom-title">店名</div>
+    <div id="shopInfo" class="bottom-info">説明</div>
+    <div class="card-action-row">
+      <label id="originToggleBtn" class="origin-toggle-btn">
+        <input type="checkbox" id="setOriginChk">
+        📍 出発地
+      </label>
+      <button id="saveToggleBtn" class="save-toggle-btn">☆ 保存</button>
+    </div>
+    <button id="showAreaBtn" class="show-area-btn" style="display:none;">📍 周辺の店舗を表示</button>
+    <button class="detail-btn">Googleマップで見る</button>
+  </div>
+
+  <!-- 下タブ -->
+  <div class="tab-bar">
+    <div class="tab-item" id="stadiumTab">⚽<br>スタジアム</div>
+    <div class="tab-item" id="generalTab">🏪<br>一般店舗</div>
+    <div class="tab-item tab-disabled" id="routeTab">🧭<br>経路検索</div>
+    <div class="tab-item" id="savedTab">⭐<br>保存</div>
+  </div>
+
+  <!-- 保存リスト画面 -->
+  <div id="savedScreen" class="saved-screen" style="display:none;">
+    <div class="saved-header">
+      <div class="saved-title">⭐ 保存リスト</div>
+      <button id="closeSavedBtn" class="close-btn">×</button>
+    </div>
+    <div id="savedList" class="saved-list"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- アプリ本体 -->
+  <script src="app.js"></script>
+
+  <!-- Google Maps -->
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDq01peBIq6PC5ESeSG5t2CipVBUCC1WF4&callback=initMap"></script>
+
+</body>
+</html>
