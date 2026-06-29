@@ -696,4 +696,7 @@ window.initMap = function () {
   /* ── 初回ロード ── */
   loadShops();
   loadStadiums();
+
+  /* ── ブラウザのオートフィル対応：ページ読込時にクリアボタン表示を更新 ── */
+  updateClearBtn();
 };
