@@ -1,9 +1,9 @@
 version: 0.8.1
-release_date: 2026-06-29
-summary: 検索ボックス不具合修正
+release_date: 2026-07-03
+summary: サブタイトル変更
 
 changes:
-  - initMap の最後で updateClearBtn() を呼ぶことで、ページ表示時点の入力欄の状態を確認し、値があれば×ボタンを表示します。
+  - （ここに変更内容を追記）
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
