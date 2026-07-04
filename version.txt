@@ -1,9 +1,12 @@
-version: 0.8.1
-release_date: 2026-07-03
-summary: サブタイトル変更
+version: 0.8.2
+release_date: 2026-07-04
+summary: SEO対策
 
 changes:
-  - （ここに変更内容を追記）
+  - ①タイトルを検索向けに最適化
+  - ②meta description を追加
+  - ③OGP（SNSシェア用）を追加
+  - ④サブタイトルの変更
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
