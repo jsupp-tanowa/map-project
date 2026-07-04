@@ -575,10 +575,15 @@ window.initMap = function () {
   let unsubShops    = null;
   let unsubStadiums = null;
 
+  // 再接続処理から「実際に新しいデータが来たか」を判定するためのタイムスタンプ
+  let lastShopsSnapshotAt    = 0;
+  let lastStadiumsSnapshotAt = 0;
+
   function subscribeShops() {
     if (unsubShops) { unsubShops(); unsubShops = null; }
     unsubShops = db.collection("shops").onSnapshot(
       snapshot => {
+        lastShopsSnapshotAt = Date.now();
         const newData = [];
         snapshot.forEach(doc => newData.push(doc.data()));
         allShops = newData;
@@ -590,6 +595,7 @@ window.initMap = function () {
         // エラー時はフォールバックとして1回getを試みる
         db.collection("shops").get({ source: "server" })
           .then(snapshot => {
+            lastShopsSnapshotAt = Date.now();
             const newData = [];
             snapshot.forEach(doc => newData.push(doc.data()));
             allShops = newData;
@@ -603,6 +609,7 @@ window.initMap = function () {
     if (unsubStadiums) { unsubStadiums(); unsubStadiums = null; }
     unsubStadiums = db.collection("stadiums").onSnapshot(
       snapshot => {
+        lastStadiumsSnapshotAt = Date.now();
         const newData = [];
         snapshot.forEach(doc => newData.push(doc.data()));
         allStadiums = newData;
@@ -613,6 +620,7 @@ window.initMap = function () {
         unsubStadiums = null;
         db.collection("stadiums").get({ source: "server" })
           .then(snapshot => {
+            lastStadiumsSnapshotAt = Date.now();
             const newData = [];
             snapshot.forEach(doc => newData.push(doc.data()));
             allStadiums = newData;
@@ -629,11 +637,17 @@ window.initMap = function () {
   /* ── タブ復帰時に再接続（visibilitychange + pageshow 併用） ──
      放置後はFirestoreのWebSocket接続が切断されonSnapshotが止まるため、
      復帰時にネットワークを再確立してリスナーを張り直す。 */
+  let isReloading  = false;
   let lastReloadAt = 0;
   function reloadOnResume() {
     const now = Date.now();
-    if (now - lastReloadAt < 3000) return;
+    // 前回の再接続処理がまだ完了していない間は多重実行しない
+    // （disableNetwork/enableNetworkの二重呼び出しでFirestoreの接続状態が
+    //   固まったままになり、ピンが復活しなくなる不具合の対策）
+    if (isReloading || now - lastReloadAt < 3000) return;
+    isReloading = true;
     lastReloadAt = now;
+    const reloadStartedAt = now;
 
     // リスナーをいったん解除してからネットワーク再接続→再登録
     if (unsubShops)    { unsubShops();    unsubShops    = null; }
@@ -645,6 +659,32 @@ window.initMap = function () {
       .finally(() => {
         subscribeShops();
         subscribeStadiums();
+
+        // 一定時間経ってもonSnapshotから新しいデータが来なければ
+        // 強制的にサーバーから再取得する保険（詰まり対策）
+        setTimeout(() => {
+          if (lastShopsSnapshotAt < reloadStartedAt) {
+            db.collection("shops").get({ source: "server" })
+              .then(snapshot => {
+                lastShopsSnapshotAt = Date.now();
+                const newData = [];
+                snapshot.forEach(doc => newData.push(doc.data()));
+                allShops = newData;
+                refreshShopMarkers();
+              }).catch(() => {});
+          }
+          if (lastStadiumsSnapshotAt < reloadStartedAt) {
+            db.collection("stadiums").get({ source: "server" })
+              .then(snapshot => {
+                lastStadiumsSnapshotAt = Date.now();
+                const newData = [];
+                snapshot.forEach(doc => newData.push(doc.data()));
+                allStadiums = newData;
+                refreshStadiumMarkers();
+              }).catch(() => {});
+          }
+          isReloading = false;
+        }, 4000);
       });
   }
 
