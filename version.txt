@@ -1,6 +1,6 @@
 version: 0.8.3
 release_date: 2026-07-04
-summary: ogp画像追加
+summary: 再接続処理の修正
 
 changes:
   - （ここに変更内容を追記）
