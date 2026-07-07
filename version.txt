@@ -1,9 +1,10 @@
-version: 0.8.4
-release_date: 2026-07-04
-summary: サブタイトル修正
+version: 0.8.5
+release_date: 2026-07-07
+summary: スタジアム検索時ピン移動の修正
 
 changes:
-  - （ここに変更内容を追記）
+  - originData に placeid を追加保持するようにした
+  - refreshStadiumMarkers() のズーム抑制条件を「出発地がスタジアムである間は常にスキップ」から「検索結果が出発地に設定したスタジアム自身1件だけの場合のみスキップ」に変更
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ

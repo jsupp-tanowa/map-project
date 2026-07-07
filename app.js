@@ -127,10 +127,11 @@ window.initMap = function () {
   setOriginChk.addEventListener("change", () => {
     if (setOriginChk.checked && currentDestination) {
       originData = {
-        lat:  currentDestination.lat,
-        lng:  currentDestination.lng,
-        name: currentDestination.name,
-        type: currentDestination.type  // ④ スタジアム判定用
+        lat:     currentDestination.lat,
+        lng:     currentDestination.lng,
+        name:    currentDestination.name,
+        type:    currentDestination.type,    // ④ スタジアム判定用
+        placeid: currentDestination.placeid  // ④ 「出発地自身の再検索」判定用
       };
     } else {
       originData = null;
@@ -391,10 +392,19 @@ window.initMap = function () {
     filtered.forEach(s => createStadiumMarker(s));
 
     // ④ スタジアム優先ズーム：
-    //    キーワードあり かつ スタジアムがヒット かつ 出発地がスタジアムでない 場合のみfitBounds
+    //    キーワードあり かつ スタジアムがヒット の場合にfitBoundsする。
+    //    ただし「出発地に設定したスタジアム自身だけ」がヒットした場合は、
+    //    無駄なカメラ移動を避けるためスキップする
+    //    （出発地がスタジアムというだけで以降の検索が全て無視される
+    //      不具合があったため、判定をplaceid単位に限定した）
     if (variants.length && stadiumMarkers.length > 0) {
-      const originIsStadium = originData && originData.type === "stadiums";
-      if (!originIsStadium) {
+      const isOnlyOriginStadiumItself =
+        originData &&
+        originData.type === "stadiums" &&
+        filtered.length === 1 &&
+        filtered[0].placeid === originData.placeid;
+
+      if (!isOnlyOriginStadiumItself) {
         fitToMarkers(stadiumMarkers);
       }
     }
