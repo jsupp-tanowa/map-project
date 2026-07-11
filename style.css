@@ -224,7 +224,7 @@ button {
   bottom: 63px;
   background: white;
   border-radius: 20px 20px 0 0;
-  padding: 16px;
+  padding: 24px 16px 16px 16px;
   z-index: 999;
   box-shadow: 0 -2px 15px rgba(0,0,0,.2);
   max-height: 70vh;
@@ -253,27 +253,27 @@ button {
   font-family: "M PLUS 1p", sans-serif;
   font-weight: 900;
   color: #222;
-  line-height: 1.4;
+  line-height: 26px;
 }
 
 .bottom-info {
-  margin-top: 10px;
+  margin-top: 6px;
   font-size: 14px;
   line-height: 1.6;
   font-family: "M PLUS 1p", sans-serif;
   color: #555;
 }
 
-/* ⑤ 店名・推しクラブ行のみ本文と同様の行間(1.4)に */
+/* ⑤ 店名・推しクラブ行のみ余分な行間をなくし、以降の表示スペースを確保 */
 .team-line {
   display: inline-block;
-  line-height: 1.4;
+  line-height: 14px;
 }
 
 .detail-btn {
   position: sticky;
   bottom: 0;
-  margin-top: 24px;
+  margin-top: 28px;
   width: 100%;
   font-size: 14px;
   padding: 8px 12px;
