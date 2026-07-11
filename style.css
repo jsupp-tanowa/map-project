@@ -10,7 +10,7 @@ body {
   left:0;
   right:0;
 
-  height:72px;
+  height:54px;
 
   display:flex;
   flex-direction:column;
@@ -51,14 +51,14 @@ body {
 /* 地図 */
 #map {
   width:100%;
-  height:calc(100dvh - 210px);
-  margin-top:130px;
+  height:calc(100dvh - 175px);
+  margin-top:112px;
 }
 
 /* 現在地ボタン */
 .button-area {
   position: absolute;
-  bottom: 90px;
+  bottom: 85px;
   right: 10px;
   z-index: 999;
 }
@@ -110,7 +110,7 @@ button {
 /* 検索バー（固定表示） */
 .search-bar-fixed {
   position: absolute;
-  top: 72px;
+  top: 54px;
   left: 10px;
   right: 10px;
   z-index: 999;
@@ -156,7 +156,7 @@ button {
 /* フィルター */
 .filter-area {
   position: absolute;
-  top: 125px;
+  top: 107px;
   left: 10px;
   right: 10px;
   display: flex;
@@ -182,7 +182,7 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 53px;
   background: white;
   display: flex;
   justify-content: space-around;
@@ -221,7 +221,7 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 80px;
+  bottom: 63px;
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 16px;
@@ -249,7 +249,7 @@ button {
 
 /* 店舗カード内 */
 .bottom-title {
-  font-size: 28px;
+  font-size: 26px;
   font-family: "M PLUS 1p", sans-serif;
   font-weight: 900;
   color: #222;
@@ -257,8 +257,8 @@ button {
 
 .bottom-info {
   margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.6;
   font-family: "M PLUS 1p", sans-serif;
   color: #555;
 }
@@ -278,7 +278,7 @@ button {
   width: 100%;
   margin-top: 10px;
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-family: "M PLUS 1p", sans-serif;
   font-weight: 700;
   background: #e8f5e9;
@@ -316,6 +316,15 @@ button {
   border-radius: 12px;
   margin-bottom: 10px;
   background: #eee;
+}
+
+/* ⑤ 営業時間等の注意文言 */
+.shop-notice {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  font-family: "M PLUS 1p", sans-serif;
+  color: #999;
 }
 
 /* 出発地セット行 */
