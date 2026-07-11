@@ -253,7 +253,7 @@ button {
   font-family: "M PLUS 1p", sans-serif;
   font-weight: 900;
   color: #222;
-  line-height: 1.8;
+  line-height: 1.4;
 }
 
 .bottom-info {
@@ -264,16 +264,16 @@ button {
   color: #555;
 }
 
-/* ⑤ 店名・推しクラブ行のみ本文と同様の行間(1.8)に */
+/* ⑤ 店名・推しクラブ行のみ本文と同様の行間(1.4)に */
 .team-line {
   display: inline-block;
-  line-height: 1.8;
+  line-height: 1.4;
 }
 
 .detail-btn {
   position: sticky;
   bottom: 0;
-  margin-top: 18px;
+  margin-top: 24px;
   width: 100%;
   font-size: 14px;
   padding: 8px 12px;
