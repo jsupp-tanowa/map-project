@@ -1,9 +1,15 @@
-version: 0.9.1
-release_date: 2026-07-11
-summary: 記載文言変更③
+version: 0.9.2
+release_date: 2026-07-12
+summary: 記載文言変更/店舗カード変更
 
 changes:
-  - 注意文言を「※営業時間などについては、最新情報をご確認ください。」に変更しました。
+  - ①サブタイトルを「スタジアム起点にサポーター歓迎店やおすすめ飲食店を探せるマップ」に変更
+②カード上部padding 16px→24px（上方向に8px拡大）
+③Googleマップボタン margin-top: 24px→28px（4px下げ）
+④店名line-height: 32px／推しクラブ行line-height: 16px（それぞれ絶対値で4px縮小）
+→店名のline-height：32px → 26px（フォントサイズと同値まで余分な行間を除去）
+推しクラブ行のline-height：16px → 14px（同様に余分な行間を除去）
+店名ブロックと本文ブロックの間のmargin-top：10px → 6px（ブロック間の余白も詰める）
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
