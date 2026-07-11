@@ -312,17 +312,19 @@ window.initMap = function () {
     marker.addListener("click", () => {
       openCard();
       document.getElementById("shopName").innerText = shop.name;
-      const teamLine = (isSupporter && shop.team) ? `推しクラブ: ${shop.team}<br>` : "";
+      const teamLine = (isSupporter && shop.team)
+        ? `<span class="team-line">推しクラブ: ${shop.team}</span><br>` : "";
 
-      // ③ 熱狂度（supportLevel 0〜5）を炎アイコンで表現
+      // ③ サッカー熱狂度（supportLevel 0〜5）を炎アイコンで表現
       const level = Math.min(Math.max(Number(shop.supportLevel) || 0, 0), 5);
       const flameLine = (isSupporter && level > 0)
-        ? `熱狂度: ${"🔥".repeat(level)}<br>` : "";
+        ? `サッカー熱狂度: ${"🔥".repeat(level)}<br>` : "";
 
       // ③ 訪問済み・試合放映バッジ
+      // ① supportLevel=0（非サポーター店舗）では「訪問済み」表示は不要
       const badges = [];
-      if (shop.visited) badges.push("✅ 訪問済み");
-      if (shop.screen)  badges.push("📺 試合放映あり");
+      if (isSupporter && shop.visited) badges.push("✅ 訪問済み");
+      if (shop.screen) badges.push("📺 試合放映あり");
       const badgeLine = badges.length ? `${badges.join("　")}<br>` : "";
 
       const noteLine = (isSupporter && shop.note) ? `${shop.note}` : "";
