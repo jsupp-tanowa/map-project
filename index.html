@@ -24,6 +24,7 @@
 
 <body>
 <header class="app-header">
+  <button id="helpBtn" class="help-btn" aria-label="使い方">？</button>
   <div class="title">サポたのわ（β版）</div>
   <div class="subtitle">
     スタジアムを起点にサポーター歓迎店やおすすめ飲食店を探せるマップ
@@ -102,6 +103,45 @@
       <button id="closeSavedBtn" class="close-btn">×</button>
     </div>
     <div id="savedList" class="saved-list"></div>
+  </div>
+
+  <!-- 使い方画面 -->
+  <div id="helpScreen" class="saved-screen" style="display:none;">
+    <div class="saved-header">
+      <div class="saved-title">？ 使い方</div>
+      <button id="closeHelpBtn" class="close-btn">×</button>
+    </div>
+    <div class="help-content">
+      <section class="help-section">
+        <h3>① 検索</h3>
+        <p>スタジアム名・クラブ名・地域名で検索できます（スタジアムの検索専用）。</p>
+      </section>
+      <section class="help-section">
+        <h3>② タブ切り替え</h3>
+        <ul>
+          <li>⚽スタジアム／🏪一般店舗：地図に表示するピンの種類を切り替えられます</li>
+          <li>🧭経路検索：Googleマップに遷移し経路検索を実行します。（店舗・スタジアムカードで出発地を指定していない場合は、現在地が出発地となります。）</li>
+          <li>⭐保存：保存した店舗・スタジアムの一覧を確認できます</li>
+        </ul>
+      </section>
+      <section class="help-section">
+        <h3>③ 現在地ボタン</h3>
+        <p>右下の現在地ボタンで現在地に地図を移動できます。</p>
+      </section>
+      <section class="help-section">
+        <h3>④ 店舗・スタジアムカード</h3>
+        <p>ピンをタップすると詳細カードが表示されます。</p>
+        <ul>
+          <li>📍出発地：経路検索の出発地点として設定</li>
+          <li>☆保存：お気に入りとして保存リストに追加</li>
+          <li>Googleマップで見る：Googleマップアプリで詳細を確認</li>
+        </ul>
+      </section>
+      <section class="help-section">
+        <h3>⑤ サポーター歓迎店の表示内容</h3>
+        <p>🔥アイコンでサッカー熱狂度を、✅で訪問済み、📺で試合放映ありを表示しています。</p>
+      </section>
+    </div>
   </div>
 
   <!-- Firebase -->

@@ -591,6 +591,19 @@ window.initMap = function () {
     savedScreen.style.display = "none";
   });
 
+  /* ── ヘルプ（使い方）画面 ── */
+  const helpBtn      = document.getElementById("helpBtn");
+  const helpScreen   = document.getElementById("helpScreen");
+  const closeHelpBtn = document.getElementById("closeHelpBtn");
+
+  helpBtn.addEventListener("click", () => {
+    helpScreen.style.display = "flex";
+  });
+
+  closeHelpBtn.addEventListener("click", () => {
+    helpScreen.style.display = "none";
+  });
+
   /* ── 検索バー入力 ── */
   searchInput.addEventListener("input", () => {
     updateClearBtn();
