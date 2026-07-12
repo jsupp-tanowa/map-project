@@ -486,6 +486,11 @@ button {
   font-size: 28px;
 }
 
+/* ③ ヘルプページのヘッダーはメインページのヘッダー高さ(54px)に合わせる */
+.help-header {
+  height: 54px;
+}
+
 .saved-list {
   flex: 1;
   overflow-y: auto;
