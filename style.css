@@ -456,7 +456,7 @@ button {
 
 .saved-header {
   position: relative;
-  height: 72px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,11 +484,6 @@ button {
   transform: translateY(-50%);
   color: white;
   font-size: 28px;
-}
-
-/* ③ ヘルプページのヘッダーはメインページのヘッダー高さ(54px)に合わせる */
-.help-header {
-  height: 54px;
 }
 
 .saved-list {
