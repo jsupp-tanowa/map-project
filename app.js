@@ -370,11 +370,16 @@ window.initMap = function () {
     const keyword  = searchInput.value.trim();
     const variants = keyword ? normalizeKeyword(keyword) : [];
 
-    // ① 検索ボックスはスタジアム専用のため、店舗側はキーワードに関係なく
-    //    showGeneralフラグと published フラグのみで表示を制御する
+    // ① 検索ボックスは shops.category / shops.team も検索対象とする
     allShops.filter(shop => {
       if (!shop.published) return false;
       if (shop.supportLevel === 0 && !showGeneral) return false;
+      if (variants.length) {
+        return (
+          matchField(shop.category, variants) ||
+          matchField(shop.team,     variants)
+        );
+      }
       return true;
     }).forEach(shop => createShopMarker(shop));
   }

@@ -29,8 +29,8 @@
     <button id="helpBtn" class="help-btn" aria-label="使い方">
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
     </button>
   </div>
@@ -45,7 +45,7 @@
       <input
         id="searchInput"
         type="text"
-        placeholder="スタジアム名・クラブ名・地域検索">
+        placeholder="スタジアム名・クラブ名・ジャンル検索">
       <button id="searchClearBtn" class="search-clear-btn">×</button>
     </div>
   </div>
@@ -115,8 +115,8 @@
 
   <!-- 使い方画面 -->
   <div id="helpScreen" class="saved-screen" style="display:none;">
-    <div class="saved-header">
-      <div class="saved-title">？ 使い方</div>
+    <div class="saved-header help-header">
+      <div class="saved-title">使用方法/お知らせなど</div>
       <button id="closeHelpBtn" class="close-btn">×</button>
     </div>
     <div class="help-content">
@@ -156,7 +156,12 @@
       </section>
       <section class="help-section">
         <h3>⑥ サポーター歓迎店の表示内容</h3>
-        <p>🔥アイコンでサッカー熱狂度を、✅で管理者の店舗訪問ありを、📺で試合放映ありを表示しています。</p>
+        <p>
+          「炎マーク」は5段階のサッカー熱狂度<br>
+          「チェックアイコン」は管理者による店舗訪問あり<br>
+          「テレビアイコン」は試合放映あり<br>
+          を表しています。
+        </p>
       </section>
     </div>
   </div>
