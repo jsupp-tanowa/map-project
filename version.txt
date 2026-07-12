@@ -1,10 +1,10 @@
-version: 0.9.5.3
+version: 0.9.5.4
 release_date: 2026-07-12
-summary: ヘルプ関連の微調整
+summary: ヘルプ内容の修正
 
 changes:
-  -ヘルプ内一般店舗のピン表示説明の位置変更
-店舗訪問確認済の文言変更
+  -ヘルプ内一般店舗のピン表示説明の位置再変更
+経路検索の文言変更
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
