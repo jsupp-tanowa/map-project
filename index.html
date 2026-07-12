@@ -24,14 +24,16 @@
 
 <body>
 <header class="app-header">
-  <button id="helpBtn" class="help-btn" aria-label="使い方">
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path>
-      <line x1="12" y1="17" x2="12.01" y2="17"></line>
-    </svg>
-  </button>
-  <div class="title">サポたのわ（β版）</div>
+  <div class="title-row">
+    <div class="title">サポたのわ（β版）</div>
+    <button id="helpBtn" class="help-btn" aria-label="使い方">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </button>
+  </div>
   <div class="subtitle">
     スタジアムを起点にサポーター歓迎店やおすすめ飲食店を探せるマップ
   </div>
@@ -119,11 +121,20 @@
     </div>
     <div class="help-content">
       <section class="help-section">
-        <h3>① 検索</h3>
+        <h3>① ピン表示の説明</h3>
+        <ul class="help-pin-list">
+          <li><img src="http://maps.google.com/mapfiles/ms/micons/sportvenue.png" alt=""> スタジアム</li>
+          <li><img src="http://maps.google.com/mapfiles/ms/micons/blue-dot.png" alt=""> サポーター歓迎店</li>
+          <li><img src="http://labs.google.com/ridefinder/images/mm_20_red.png" alt=""> 一般店舗</li>
+          <li><img src="http://maps.google.com/mapfiles/ms/micons/yellow-dot.png" alt=""> 現在地</li>
+        </ul>
+      </section>
+      <section class="help-section">
+        <h3>② 検索</h3>
         <p>スタジアム名・クラブ名・地域名で検索できます（スタジアムの検索専用）。</p>
       </section>
       <section class="help-section">
-        <h3>② タブ切り替え</h3>
+        <h3>③ タブ切り替え</h3>
         <ul>
           <li>⚽スタジアム／🏪一般店舗：地図に表示するピンの種類を切り替えられます</li>
           <li>🧭経路検索：Googleマップに遷移し経路検索を実行します。（店舗・スタジアムカードで出発地を指定していない場合は、現在地が出発地となります。）</li>
@@ -131,11 +142,11 @@
         </ul>
       </section>
       <section class="help-section">
-        <h3>③ 現在地ボタン</h3>
+        <h3>④ 現在地ボタン</h3>
         <p>右下の現在地ボタンで現在地に地図を移動できます。</p>
       </section>
       <section class="help-section">
-        <h3>④ 店舗・スタジアムカード</h3>
+        <h3>⑤ 店舗・スタジアムカード</h3>
         <p>ピンをタップすると詳細カードが表示されます。</p>
         <ul>
           <li>📍出発地：経路検索の出発地点として設定</li>
@@ -144,7 +155,7 @@
         </ul>
       </section>
       <section class="help-section">
-        <h3>⑤ サポーター歓迎店の表示内容</h3>
+        <h3>⑥ サポーター歓迎店の表示内容</h3>
         <p>🔥アイコンでサッカー熱狂度を、✅で店舗訪問確認済み、📺で試合放映ありを表示しています。</p>
       </section>
     </div>

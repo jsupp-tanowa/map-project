@@ -40,11 +40,15 @@ body {
   line-height:1;
 }
 
+/* タイトル行（タイトル＋ヘルプボタン） */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* ヘルプボタン */
 .help-btn {
-  position: absolute;
-  top: 5px;
-  right: 14px;
   width: 20px;
   height: 20px;
   padding: 0;
@@ -54,6 +58,7 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  flex-shrink: 0;
 }
 
 .subtitle{
@@ -575,4 +580,23 @@ button {
 
 .help-section li {
   margin-bottom: 4px;
+}
+
+.help-pin-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.help-pin-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.help-pin-list img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
