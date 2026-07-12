@@ -267,7 +267,10 @@ window.initMap = function () {
         showGeneral = true;
         const generalTab = document.getElementById("generalTab");
         if (generalTab) generalTab.style.opacity = "1";
-        refreshShopMarkers();
+        // ② 検索ボックスと検索結果をクリアしてから再描画
+        //    （検索キーワードが残っていると店舗のcategory/team検索に
+        //      ヒットせず、周辺の一般店舗や他スタジアムが表示されない不具合対策）
+        clearSearch();
         // 都道府県レベル（zoom 10）でスタジアムを中心に表示
         map.setCenter({ lat: Number(stadium.lat), lng: Number(stadium.lng) });
         map.setZoom(10);
