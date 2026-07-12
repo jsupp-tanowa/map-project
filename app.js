@@ -109,7 +109,7 @@ window.initMap = function () {
   let allStadiums    = [];
   let shopMarkers    = [];
   let stadiumMarkers = [];
-  let showGeneral    = false;
+  let showGeneral    = true;
   let showStadiums   = true;
 
   /* ── ①② 出発地管理 ── */
@@ -501,7 +501,7 @@ window.initMap = function () {
     clearSearch();
     refreshShopMarkers();
   });
-  generalTab.style.opacity = "0.5";
+  generalTab.style.opacity = "1";
 
   /* ── タブ：保存 ── */
   const savedTab    = document.getElementById("savedTab");
