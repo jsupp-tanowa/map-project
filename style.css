@@ -556,6 +556,11 @@ button {
   margin-bottom: 22px;
 }
 
+/* ②「⚽使い方」と直後のセクションの行間を詰める */
+.help-section-tight {
+  margin-bottom: 4px;
+}
+
 .help-section h3 {
   margin: 0 0 8px;
   font-size: 16px;
