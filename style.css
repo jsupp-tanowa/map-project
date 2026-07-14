@@ -49,8 +49,12 @@ body {
 
 /* ヘルプボタン */
 .help-btn {
-  width: 20px;
-  height: 20px;
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
   padding: 0;
   border-radius: 50%;
   background: rgba(255,255,255,.9);
