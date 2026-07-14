@@ -35,7 +35,7 @@ function matchField(field, variants) {
 }
 
 /* ── localStorage 保存機能 ── */
-const SAVE_KEY = "saportanowa_saved";
+const SAVE_KEY = "supportanowa_saved";
 
 function loadSavedData() {
   try {
