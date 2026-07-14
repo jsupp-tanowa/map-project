@@ -42,16 +42,19 @@ body {
 
 /* タイトル行（タイトル＋ヘルプボタン） */
 .title-row {
+  position: relative;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 6px;
 }
 
 /* ヘルプボタン */
 .help-btn {
   position: absolute;
-  top: 8px;
+  top: 50%;
   right: 14px;
+  transform: translateY(-50%);
   width: 28px;
   height: 28px;
   padding: 0;
