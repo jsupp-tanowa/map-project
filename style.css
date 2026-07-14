@@ -50,9 +50,8 @@ body {
 /* ヘルプボタン */
 .help-btn {
   position: absolute;
-  top: 50%;
+  top: 8px;
   right: 14px;
-  transform: translateY(-50%);
   width: 28px;
   height: 28px;
   padding: 0;
