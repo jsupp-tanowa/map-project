@@ -10,8 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <title>サポたのわ（β版）｜サッカー好きのための地図アプリ</title>
+  <title>サポたのわ｜サッカー好きのための地図アプリ</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- iOS ホーム画面に追加した際のアイコン・表示設定 -->
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="サポたのわ">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <meta name="description" content="サポたのわは、サッカー好きが集まる飲食店をはじめとした、おすすめ店舗を探せる地図アプリです。">
 
@@ -25,7 +31,7 @@
 <body>
 <header class="app-header">
   <div class="title-row">
-    <div class="title">サポたのわ（β版）</div>
+    <div class="title">サポたのわ</div>
     <button id="helpBtn" class="help-btn" aria-label="使い方">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
@@ -51,15 +57,7 @@
   </div>
 
 
-  <!-- フィルター -->
-  <!--
-  <div class="filter-area">
-    <button>ごはんや</button>
-    <button>居酒屋</button>
-    <button>バー</button>
-  </div>
-　-->
-  
+
   <!-- 現在地ボタン -->
   <div class="button-area">
     <button onclick="moveToCurrentLocation()" class="location-btn">
