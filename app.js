@@ -764,6 +764,24 @@ window.initMap = function () {
     reloadOnResume();
   });
 
+  /* ── ② 手動リロードボタン ──
+     ホーム画面起動時など、自動リトライでもピンが復活しない場合の
+     ユーザー自身によるリカバリー手段。押すたびに強制的に
+     再接続処理を実行する。 */
+  const reloadPinsBtn = document.getElementById("reloadPinsBtn");
+  if (reloadPinsBtn) {
+    reloadPinsBtn.addEventListener("click", () => {
+      reloadPinsBtn.classList.remove("spinning");
+      // 強制再生成でアニメーションを毎回再生させる
+      void reloadPinsBtn.offsetWidth;
+      reloadPinsBtn.classList.add("spinning");
+      // ボタン手動操作時は連打防止用のクールダウンを無視して即実行したいので、
+      // lastReloadAt を直接リセットしてから呼び出す
+      lastReloadAt = 0;
+      reloadOnResume();
+    });
+  }
+
   /* ── カード閉じる ── */
   document.getElementById("closeCardBtn").addEventListener("click", closeCard);
 
@@ -804,6 +822,20 @@ window.initMap = function () {
   /* ── 初回ロード ── */
   loadShops();
   loadStadiums();
+
+  /* ── ① 起動時ウォッチドッグ ──
+     ホーム画面アイコンからの新規起動（コールドスタート）時は
+     visibilitychange/pageshowが発火しないため、上記の復帰時
+     再接続ロジックが働かない。起動直後にFirestoreの初回接続が
+     失敗して一切ピンが表示されないケースの対策として、起動から
+     一定時間経ってもデータが1件も来ていなければ自動的に
+     reloadOnResume() を実行し、再接続を試みる。 */
+  const appLaunchedAt = Date.now();
+  setTimeout(() => {
+    if (lastShopsSnapshotAt < appLaunchedAt && lastStadiumsSnapshotAt < appLaunchedAt) {
+      reloadOnResume();
+    }
+  }, 6000);
 
   /* ── ブラウザのオートフィル対応：ページ読込時にクリアボタン表示を更新 ── */
   updateClearBtn();
