@@ -82,7 +82,9 @@ body {
 /* 地図 */
 #map {
   width:100%;
-  height:calc(100dvh - 175px - env(safe-area-inset-top, 0px));
+  /* ② フッターとの間に生じていた余分な隙間（10px）を詰め、
+     フッターの高さ（53px）ぴったりまで地図を表示する */
+  height:calc(100dvh - 165px - env(safe-area-inset-top, 0px));
   margin-top:calc(112px + env(safe-area-inset-top, 0px));
 }
 
@@ -223,10 +225,10 @@ button {
 /* 下タブ */
 .tab-bar {
   position: absolute;
-  /* ② iPhoneの画面下部（角丸・ホームインジケーター領域）にタブが
-     めり込まないよう、セーフエリア分だけ上方にずらす。
-     露出した最下部の帯は body の白背景がそのまま見える。 */
-  bottom: env(safe-area-inset-bottom, 0px);
+  /* ① セーフエリア分そのまま上げると余白が空きすぎるため、
+     フッター自体の高さ（53px）を差し引いた分だけ上方にずらす。
+     セーフエリアが53pxを超えない限りは実質bottom:0（従来通り）になる。 */
+  bottom: max(0px, calc(env(safe-area-inset-bottom, 0px) - 53px));
   left: 0;
   right: 0;
   height: 53px;
@@ -268,9 +270,8 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  /* タブバーがセーフエリア分だけ上に移動した分、カードも同じだけ底上げして
-     タブバーとの間隔（10px）を保つ */
-  bottom: calc(63px + env(safe-area-inset-bottom, 0px));
+  /* タブバーの新しい位置（①の計算式）に10pxの間隔を保って追従 */
+  bottom: calc(max(0px, calc(env(safe-area-inset-bottom, 0px) - 53px)) + 63px);
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
