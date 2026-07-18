@@ -16,6 +16,21 @@ let map;
 let userLocation  = null;
 let currentMarker = null;
 
+/* ── 外部リンク（Googleマップ）遷移 ──
+   iOSでホーム画面に追加して起動している場合（スタンドアロンモード）は、
+   window.open() で新しいウィンドウを作ると、Googleマップアプリへ
+   ハンドオフされた後に空白ページ（×ボタンのみ）が残ってしまう。
+   そのため、スタンドアロンモード時は現在のウィンドウをそのまま遷移させる。
+   通常のブラウザ（PC・Android等）では従来通り新しいタブで開く。 */
+function openExternalMapLink(url) {
+  const isStandalone = window.navigator.standalone === true;
+  if (isStandalone) {
+    location.href = url;
+  } else {
+    window.open(url, "_blank");
+  }
+}
+
 /* ひらがな↔カタカナ・大文字小文字 */
 function toHiragana(str) {
   return str.replace(/[\u30A1-\u30F6]/g, ch =>
@@ -199,7 +214,7 @@ window.initMap = function () {
       ? `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destName}&destination_place_id=${destPlaceId}&travelmode=transit`
       : `https://www.google.com/maps/dir/?api=1&destination=${destName}&destination_place_id=${destPlaceId}&travelmode=transit`;
 
-    window.open(url, "_blank");
+    openExternalMapLink(url);
   });
 
   /* ── 検索バークリア ── */
@@ -258,7 +273,7 @@ window.initMap = function () {
       imgEl.src = ""; imgEl.style.display = "none";
 
       document.querySelector(".detail-btn").onclick = () => {
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stadium.name)}&query_place_id=${stadium.placeid}`, "_blank");
+        openExternalMapLink(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stadium.name)}&query_place_id=${stadium.placeid}`);
       };
 
       // ② 周辺表示ボタン
@@ -344,7 +359,7 @@ window.initMap = function () {
         imgEl.src = ""; imgEl.style.display = "none";
       }
       document.querySelector(".detail-btn").onclick = () => {
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name)}&query_place_id=${shop.placeid}`, "_blank");
+        openExternalMapLink(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name)}&query_place_id=${shop.placeid}`);
       };
 
       currentDestination = {

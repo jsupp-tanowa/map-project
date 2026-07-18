@@ -1,9 +1,12 @@
-version: 0.9.9.1
+version: 0.9.9.2
 release_date: 2026-07-18
-summary: iOSアイコン修正
+summary: iOS画面遷移時のブランクページ制御変更
 
 changes:
-  -元画像は角丸デザインで周囲に白余白があり、そのままリサイズすると余白が縁取りのように見えていました。今回、白い余白と角丸部分をすべて切り落とし、緑の四角形部分を180×180いっぱいまで拡大したものに差し替えました。
+  -openExternalMapLink() という共通関数を新設し、window.navigator.standalone(iOSでホーム画面から起動しているかどうかの判定)を見て挙動を分岐させました。
+
+ホーム画面起動時(スタンドアロン): location.href = url で同じウィンドウ内をそのまま遷移させる → 空白ページが残らない
+通常のブラウザ(PC・Android等): 従来通り window.open(url, "_blank") で新規タブに開く → 地図のページはそのまま残せる
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
