@@ -10,7 +10,11 @@ body {
   left:0;
   right:0;
 
-  height:54px;
+  /* ① viewport-fit=cover でステータスバー領域までページが描画されるため、
+     その分をpadding-topで確保してタイトルがステータスバーに隠れないようにする */
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(54px + env(safe-area-inset-top, 0px));
+  box-sizing: border-box;
 
   display:flex;
   flex-direction:column;
@@ -78,8 +82,8 @@ body {
 /* 地図 */
 #map {
   width:100%;
-  height:calc(100dvh - 175px);
-  margin-top:112px;
+  height:calc(100dvh - 175px - env(safe-area-inset-top, 0px));
+  margin-top:calc(112px + env(safe-area-inset-top, 0px));
 }
 
 /* 現在地ボタン・再読み込みボタン */
@@ -91,22 +95,27 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
 }
 
 .location-btn {
   padding: 0;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
 }
 
+.location-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* ① 再読み込みボタン（ピンが表示されない場合の手動リカバリー手段）
-   現在地ボタンより一回り小さくし、間隔を空けて重ならないようにする */
+   現在地ボタンと同じ直径に揃える */
 .reload-btn {
   padding: 0;
   border-radius: 50%;
@@ -168,7 +177,7 @@ button {
 /* 検索バー（固定表示） */
 .search-bar-fixed {
   position: absolute;
-  top: 54px;
+  top: calc(54px + env(safe-area-inset-top, 0px));
   left: 10px;
   right: 10px;
   z-index: 999;
@@ -475,7 +484,9 @@ button {
 
 .saved-header {
   position: relative;
-  height: 54px;
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(54px + env(safe-area-inset-top, 0px));
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
