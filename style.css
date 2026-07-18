@@ -82,12 +82,16 @@ body {
   margin-top:112px;
 }
 
-/* 現在地ボタン */
+/* 現在地ボタン・再読み込みボタン */
 .button-area {
   position: absolute;
   bottom: 85px;
   right: 10px;
   z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
 }
 
 .location-btn {
@@ -99,6 +103,33 @@ body {
   align-items: center;
   justify-content: center;
   background: white;
+}
+
+/* ① 再読み込みボタン（ピンが表示されない場合の手動リカバリー手段）
+   現在地ボタンより一回り小さくし、間隔を空けて重ならないようにする */
+.reload-btn {
+  padding: 0;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.reload-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.reload-btn.spinning svg {
+  animation: reload-spin 0.8s linear;
+}
+
+@keyframes reload-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 button {
@@ -183,7 +214,10 @@ button {
 /* 下タブ */
 .tab-bar {
   position: absolute;
-  bottom: 0;
+  /* ② iPhoneの画面下部（角丸・ホームインジケーター領域）にタブが
+     めり込まないよう、セーフエリア分だけ上方にずらす。
+     露出した最下部の帯は body の白背景がそのまま見える。 */
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 0;
   right: 0;
   height: 53px;
@@ -225,7 +259,9 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 63px;
+  /* タブバーがセーフエリア分だけ上に移動した分、カードも同じだけ底上げして
+     タブバーとの間隔（10px）を保つ */
+  bottom: calc(63px + env(safe-area-inset-bottom, 0px));
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
