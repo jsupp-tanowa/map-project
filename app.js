@@ -11,6 +11,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+// ① Google Analytics（GA4）計測を有効化
+firebase.analytics();
 
 let map;
 let userLocation  = null;

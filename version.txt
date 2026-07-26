@@ -1,9 +1,19 @@
-version: 0.9.9.9
+version: 0.9.9.9.1
 release_date: 2026-07-24
-summary: 接続情報変更
+summary: 解析対応＆ヘルプ文言調整
 
 changes:
-  - MapsとFirebaseを統合
+  - 2点対応しました。
+
+① Google Analytics追加
+
+index.html に firebase-analytics-compat.js のスクリプトタグを追加
+app.js で firebase.analytics() を呼び出し、既存の測定ID(G-J7HPC8G6RB)でGA4計測を有効化しました
+
+デプロイ後、Google Analyticsの管理画面(該当プロパティ)の「リアルタイム」レポートでアクセスが計測されているかご確認ください。もしFirebaseコンソール側でこのプロジェクトとGA4プロパティの連携がまだ完了していない場合は、Firebaseコンソールの「Analytics」タブから連携設定を行う必要があります。
+
+② ヘルプ文言変更
+「遠征先や出張先でも」→「遠征先や旅行先、仕事の出張先などでも」に変更しました。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
