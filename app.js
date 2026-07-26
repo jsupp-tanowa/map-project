@@ -338,9 +338,19 @@ window.initMap = function () {
     return marker;
   }
 
+  /* ── verified 判定 ──
+     supportLevel!==0（サポーター歓迎店）のうち、店舗からの掲載許可の
+     回答が得られていない（verified===false）場合は、supportLevel=0
+     の一般店舗と同一の扱いとする。verified未設定（過去データ）や
+     trueの場合は従来通りサポーター歓迎店として扱う。 */
+  function isEffectiveGeneral(shop) {
+    if (shop.supportLevel === 0) return true;
+    return shop.verified === false;
+  }
+
   /* ── 店舗マーカー作成 ── */
   function createShopMarker(shop) {
-    const isSupporter = shop.supportLevel !== 0;
+    const isSupporter = !isEffectiveGeneral(shop);
     const marker = new google.maps.Marker({
       position: { lat: Number(shop.lat), lng: Number(shop.lng) },
       map,
@@ -415,7 +425,8 @@ window.initMap = function () {
     // ① 検索ボックスは shops.category / shops.team も検索対象とする
     allShops.filter(shop => {
       if (!shop.published) return false;
-      if (shop.supportLevel === 0 && !showGeneral) return false;
+      // verified=falseのサポーター歓迎店は一般店舗と同一の表示条件とする
+      if (isEffectiveGeneral(shop) && !showGeneral) return false;
       if (variants.length) {
         return (
           matchField(shop.category, variants) ||
