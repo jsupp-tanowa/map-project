@@ -153,6 +153,9 @@ window.initMap = function () {
     } else {
       originData = null;
     }
+    // ① 出発地の変更によって「出発地＝目的地」の状態が変わるため、
+    //    経路検索ボタンの有効/無効を再判定する
+    updateRouteTabState();
   });
 
   /* ── 経路検索先 ── */
@@ -198,11 +201,28 @@ window.initMap = function () {
       routeTab.style.opacity = "0.4";
     }
   }
+
+  // ① 目的地（開いているカード）と出発地が同一の場合は無効化する
+  function updateRouteTabState() {
+    const isSameAsOrigin =
+      originData &&
+      currentDestination &&
+      originData.placeid === currentDestination.placeid;
+    setRouteTabEnabled(!!currentDestination && !isSameAsOrigin);
+  }
+
   setRouteTabEnabled(false);
 
   /* 経路検索実行 */
   routeTab.addEventListener("click", () => {
     if (!currentDestination) return;
+
+    // ① 出発地と目的地が同一の場合は経路検索を行わない
+    //    （ボタン自体は無効化されるが、念のための二重チェック）
+    if (originData && originData.placeid === currentDestination.placeid) {
+      alert("出発地と目的地が同じため、経路検索できません。\n出発地チェックを外すか、別の場所を出発地に設定してください。");
+      return;
+    }
 
     const destName    = encodeURIComponent(currentDestination.name);
     const destPlaceId = encodeURIComponent(currentDestination.placeid);
@@ -306,8 +326,9 @@ window.initMap = function () {
         lat: Number(stadium.lat),
         lng: Number(stadium.lng)
       };
-      setOriginChk.checked = false;
-      setRouteTabEnabled(true);
+      // 既にこの場所が出発地として設定されている場合はチェック状態を反映
+      setOriginChk.checked = !!(originData && originData.placeid === stadium.placeid);
+      updateRouteTabState();
       updateSaveBtnDisplay();
       // ② スタジアムカードでは周辺表示ボタンを表示
       document.getElementById("showAreaBtn").style.display = "block";
@@ -371,8 +392,9 @@ window.initMap = function () {
         lat: Number(shop.lat),
         lng: Number(shop.lng)
       };
-      setOriginChk.checked = false;
-      setRouteTabEnabled(true);
+      // 既にこの場所が出発地として設定されている場合はチェック状態を反映
+      setOriginChk.checked = !!(originData && originData.placeid === shop.placeid);
+      updateRouteTabState();
       updateSaveBtnDisplay();
       // ② 店舗カードでは周辺表示ボタンを非表示
       document.getElementById("showAreaBtn").style.display = "none";
