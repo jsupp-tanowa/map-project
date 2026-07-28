@@ -1,18 +1,9 @@
-version: 0.9.9.9.3
-release_date: 2026-07-26
-summary: shopsコレクションverifiedの有効化
+version: 0.9.9.9.4
+release_date: 2026-07-28
+summary: ヘルプ文言の修正
 
 changes:
-  - supportLevel === 0 → 常に一般店舗扱い(従来通り)
-supportLevel !== 0 かつ verified === false → 一般店舗扱いに降格
-verified が true または未設定(過去データ) → 従来通りサポーター歓迎店として扱う
-
-この関数を、以下2箇所の isSupporter 判定に反映しました。
-
-createShopMarker(): アイコン種別・推しクラブ表示・熱狂度🔥・訪問済み✅・備考・画像の表示/非表示を切り替える isSupporter の算出元
-refreshShopMarkers(): 「一般店舗タブ」ON/OFFによる表示制御の判定(shop.supportLevel === 0 だった条件を isEffectiveGeneral(shop) に変更)
-
-これにより、verified=false のサポーター歓迎店は、アイコン・カード内容・表示条件のすべてが supportLevel=0 の一般店舗と完全に同一の挙動になります。許可が取れて verified: true に更新すれば、自動的に本来のサポーター歓迎店表示に戻ります。
+  - 「✅は管理者による店舗訪問あり」→「✅は店舗訪問確認済（原則全店舗対象）」に変更しました。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
