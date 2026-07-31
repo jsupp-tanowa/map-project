@@ -82,8 +82,10 @@ body {
 /* 地図 */
 #map {
   width:100%;
-  /* ② フッターエリアを15px下げた分、地図の高さも15px拡張する */
-  height:calc(100dvh - 150px - env(safe-area-inset-top, 0px));
+  /* ② フッターエリアを下げた分、地図の高さを拡張。
+     ただしGoogleの著作権表示（Google/利用規約）が隠れないよう、
+     タブバーとの間に約8pxの表示余白を残す。 */
+  height:calc(100dvh - 158px - env(safe-area-inset-top, 0px));
   margin-top:calc(112px + env(safe-area-inset-top, 0px));
 }
 
