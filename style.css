@@ -1,6 +1,10 @@
 body {
   margin: 0;
   font-size: 16px;
+  /* タブバーの総高さ（本体53px＋セーフエリア）を変数化し、
+     地図・店舗カードの位置計算にも共通で使用する */
+  --tabbar-h: calc(53px + env(safe-area-inset-bottom, 0px));
+  --tabbar-half: calc(var(--tabbar-h) / 2);
 }
 
 /* ヘッダー */
@@ -82,9 +86,9 @@ body {
 /* 地図 */
 #map {
   width:100%;
-  /* ② フッターとの間に生じていた余分な隙間（10px）を詰め、
-     フッターの高さ（53px）ぴったりまで地図を表示する */
-  height:calc(100dvh - 165px - env(safe-area-inset-top, 0px));
+  /* 地図の下端は、タブバー全体の高さの半分の位置（アイコン中心付近）まで
+     伸ばす。タブバーは地図より手前にあるため重なっても問題ない。 */
+  height:calc(100dvh - 112px - var(--tabbar-half) - env(safe-area-inset-top, 0px));
   margin-top:calc(112px + env(safe-area-inset-top, 0px));
 }
 
@@ -228,12 +232,9 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  /* セーフエリア（ホームインジケーター領域）の分だけ高さを拡張し、
-     背景色（緑ストライプ）を実機の画面端まで塗りつぶす。
-     アイコン・文字はpadding-topにより下側（画面端側）53px分に配置する。 */
-  height: calc(53px + env(safe-area-inset-bottom, 0px));
-  padding-top: env(safe-area-inset-bottom, 0px);
-  box-sizing: border-box;
+  /* 背景色を実機の画面端まで塗りつぶすため、高さをセーフエリア分拡張。
+     アイコンは片寄せせず、この高さの中で中央揃えにする。 */
+  height: var(--tabbar-h);
   background: white;
   display: flex;
   justify-content: space-around;
@@ -272,7 +273,7 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 63px;
+  bottom: calc(var(--tabbar-h) + 10px);
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
