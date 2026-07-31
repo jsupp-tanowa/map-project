@@ -225,10 +225,7 @@ button {
 /* 下タブ */
 .tab-bar {
   position: absolute;
-  /* ① セーフエリア分そのまま上げると余白が空きすぎるため、
-     フッター自体の高さ（53px）を差し引いた分だけ上方にずらす。
-     セーフエリアが53pxを超えない限りは実質bottom:0（従来通り）になる。 */
-  bottom: max(0px, calc(env(safe-area-inset-bottom, 0px) - 53px));
+  bottom: 0;
   left: 0;
   right: 0;
   height: 53px;
@@ -249,7 +246,7 @@ button {
 
 .tab-item {
   text-align: center;
-  font-size: 13px;
+  font-size: 11px;
   color: white;
   text-shadow: 0 1px 3px rgba(0,0,0,.5);
   font-family: "Zen Kaku Gothic New", sans-serif;
@@ -270,8 +267,7 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  /* タブバーの新しい位置（①の計算式）に10pxの間隔を保って追従 */
-  bottom: calc(max(0px, calc(env(safe-area-inset-bottom, 0px) - 53px)) + 63px);
+  bottom: 63px;
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
