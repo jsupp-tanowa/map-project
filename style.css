@@ -227,8 +227,8 @@ button {
 .tab-bar {
   position: absolute;
   /* ② フッターエリア全体を固定値で少し下げ、その分だけ地図領域を拡張する。
-     高さ（53px）は変更しない。 */
-  bottom: -15px;
+     高さ（53px）は変更しない。（-15px→-23pxへ再調整） */
+  bottom: -23px;
   left: 0;
   right: 0;
   height: 53px;
@@ -270,8 +270,8 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  /* タブバーが15px下がった分、カードも15px下げて間隔（10px）を維持 */
-  bottom: 48px;
+  /* タブバーが-23pxに変更されたため、上端(30px)+10pxの間隔に合わせる */
+  bottom: 40px;
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
