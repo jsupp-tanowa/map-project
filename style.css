@@ -228,7 +228,12 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 53px;
+  /* セーフエリア（ホームインジケーター領域）の分だけ高さを拡張し、
+     背景色（緑ストライプ）を実機の画面端まで塗りつぶす。
+     アイコン・文字はpadding-bottomにより本来の53px分の領域内に収まる。 */
+  height: calc(53px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
   background: white;
   display: flex;
   justify-content: space-around;
@@ -267,7 +272,9 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 63px;
+  /* タブバーがセーフエリア分拡張された分、カードもその上端に10pxの
+     間隔を保って追従させる */
+  bottom: calc(53px + env(safe-area-inset-bottom, 0px) + 10px);
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
