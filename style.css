@@ -259,10 +259,9 @@ html.is-standalone .tab-bar {
 }
 
 /* ホーム画面起動時のみ：タブバー本体・地図本体の位置は変更せず、
-   ①タブバーと地図の間にできる隙間（上側）、
-   ②タブバー下端から画面最下部までの隙間（下側）を
-   同じ緑ストライプの装飾で埋める。 */
-html.is-standalone .tab-bar::before,
+   タブバー下端から画面最下部までの隙間を同じ緑ストライプの装飾で埋める。
+   ※上側（地図とタブバーの間）の隙間埋めは、Google著作権表示を誤って
+   覆い隠してしまったため撤去済み。 */
 html.is-standalone .tab-bar::after {
   content: "";
   position: absolute;
@@ -275,19 +274,29 @@ html.is-standalone .tab-bar::after {
     #388e3c 22px,
     #388e3c 44px
   );
-}
-
-/* 上側：地図下端(170px計算=58px)とタブバー上端(30px)の隙間（28px）を埋める */
-html.is-standalone .tab-bar::before {
-  top: -28px;
-  height: 28px;
-}
-
-/* 下側：タブバー下端から画面最下部（セーフエリア）までを埋める。
-   余裕を持って40px確保（見えない範囲まで伸びても問題ない） */
-html.is-standalone .tab-bar::after {
+  /* タブバー下端から画面最下部（セーフエリア）までを埋める。
+     余裕を持って40px確保（見えない範囲まで伸びても問題ない） */
   bottom: -40px;
   height: 40px;
+}
+
+/* 地図とタブバーの間の隙間（約28px）のうち、タブバー側の際（12px分）
+   だけを埋める。Google著作権表示が地図下端付近からはみ出す可能性を
+   考慮し、地図側には安全マージン（約16px）をあえて残している。 */
+html.is-standalone .tab-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #1b5e20 0px,
+    #1b5e20 22px,
+    #388e3c 22px,
+    #388e3c 44px
+  );
+  top: -12px;
+  height: 12px;
 }
 
 .tab-item {
