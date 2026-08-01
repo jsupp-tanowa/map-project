@@ -1,9 +1,12 @@
-version: 0.9.9.9.9.4
+version: 0.9.9.9.9.5
 release_date: 2026-08-01
-summary: フッターエリアの修正⑨
+summary: フッターエリアの修正⑩
 
 changes:
-  - .tab-bar と .bottom-sheet の html.is-standalone 向け設定は一切変更していません。html.is-standalone #map の高さ計算式のみ(151px → 170px)を変更し、タブバーとの間に約19px広い余白を作ることで、Googleロゴ・利用規約表記が隠れないようにしました。
+  - html.is-standalone 限定で、.tab-bar に ::before(上の隙間・28px分)と ::after(下のセーフエリア分・40px分、余裕を持たせています)という2つの装飾要素を追加しました。
+
+タブバー本体・地図本体の座標(位置・高さ)は一切変更していませんため、これまで直したGoogle表記の見え方やタブバーの位置に影響はありません
+ブラウザ表示時(is-standaloneクラスなし)にはこれらの装飾は表示されないため、ブラウザ側の見た目にも影響ありません
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
