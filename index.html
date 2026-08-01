@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+  <!-- ホーム画面起動（スタンドアロン）かどうかを判定し、
+       CSSの出し分け用クラスを<html>に付与する。
+       表示のチラつきを防ぐためCSS読み込み前（早い段階）に実行。 -->
+  <script>
+    if (window.navigator.standalone === true) {
+      document.documentElement.classList.add("is-standalone");
+    }
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
