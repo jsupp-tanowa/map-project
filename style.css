@@ -258,6 +258,38 @@ html.is-standalone .tab-bar {
   bottom: -23px;
 }
 
+/* ホーム画面起動時のみ：タブバー本体・地図本体の位置は変更せず、
+   ①タブバーと地図の間にできる隙間（上側）、
+   ②タブバー下端から画面最下部までの隙間（下側）を
+   同じ緑ストライプの装飾で埋める。 */
+html.is-standalone .tab-bar::before,
+html.is-standalone .tab-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #1b5e20 0px,
+    #1b5e20 22px,
+    #388e3c 22px,
+    #388e3c 44px
+  );
+}
+
+/* 上側：地図下端(170px計算=58px)とタブバー上端(30px)の隙間（28px）を埋める */
+html.is-standalone .tab-bar::before {
+  top: -28px;
+  height: 28px;
+}
+
+/* 下側：タブバー下端から画面最下部（セーフエリア）までを埋める。
+   余裕を持って40px確保（見えない範囲まで伸びても問題ない） */
+html.is-standalone .tab-bar::after {
+  bottom: -40px;
+  height: 40px;
+}
+
 .tab-item {
   text-align: center;
   font-size: 11px;
