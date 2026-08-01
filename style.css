@@ -90,7 +90,10 @@ body {
    タブバーが下に移動した分、Googleの著作権表示のための
    余白（今回はさらに広めに約20px）を残しつつ地図を拡張 */
 html.is-standalone #map {
-  height:calc(100dvh - 151px - env(safe-area-inset-top, 0px));
+  /* ① タブバーの位置は変更せず、地図の高さだけを調整して
+     Googleの著作権表示（Google/利用規約）が隠れないよう
+     タブバー上端との間に十分な余白を確保する */
+  height:calc(100dvh - 170px - env(safe-area-inset-top, 0px));
 }
 
 /* 現在地ボタン・再読み込みボタン */

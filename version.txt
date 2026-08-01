@@ -1,11 +1,9 @@
-version: 0.9.9.9.9.3
+version: 0.9.9.9.9.4
 release_date: 2026-08-01
-summary: フッターエリアの修正⑧
+summary: フッターエリアの修正⑨
 
 changes:
-  - 起動方法を判定する仕組みを追加(index.html): <head> の先頭で window.navigator.standalone を判定し、ホーム画面起動の場合のみ <html> に is-standalone というクラスを付与するようにしました。
-①ブラウザ表示: .tab-bar を bottom:0、#map の高さも隙間なくぴったり繋がるシンプルな計算式に戻しました。これでSafariのアドレスバーとの重なりも、地図とタブバーの隙間もなくなるはずです。
-②ホーム画面起動: html.is-standalone 限定のCSSとして、タブバーを下げる調整(bottom:-23px)と、Google著作権表示のための余白を従来よりさらに広め(約20px程度)に確保する形にしました。
+  - .tab-bar と .bottom-sheet の html.is-standalone 向け設定は一切変更していません。html.is-standalone #map の高さ計算式のみ(151px → 170px)を変更し、タブバーとの間に約19px広い余白を作ることで、Googleロゴ・利用規約表記が隠れないようにしました。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
