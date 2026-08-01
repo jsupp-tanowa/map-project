@@ -1,11 +1,11 @@
-version: 0.9.9.9.9.2
+version: 0.9.9.9.9.3
 release_date: 2026-08-01
-summary: フッターエリアの修正⑦
+summary: フッターエリアの修正⑧
 
 changes:
-  - タブバーの高さ(53px)はそのままに、bottom を -15px → -23px に変更しました
-(地図側の高さ計算式は変更していないため、地図の下端とタブバーの間の余白が約8px→約16pxに広がります)。
-連動して店舗カードの位置も調整済みです。
+  - 起動方法を判定する仕組みを追加(index.html): <head> の先頭で window.navigator.standalone を判定し、ホーム画面起動の場合のみ <html> に is-standalone というクラスを付与するようにしました。
+①ブラウザ表示: .tab-bar を bottom:0、#map の高さも隙間なくぴったり繋がるシンプルな計算式に戻しました。これでSafariのアドレスバーとの重なりも、地図とタブバーの隙間もなくなるはずです。
+②ホーム画面起動: html.is-standalone 限定のCSSとして、タブバーを下げる調整(bottom:-23px)と、Google著作権表示のための余白を従来よりさらに広め(約20px程度)に確保する形にしました。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ

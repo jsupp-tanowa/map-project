@@ -79,14 +79,18 @@ body {
   letter-spacing:.5px;
 }
 
-/* 地図 */
+/* 地図（デフォルト＝ブラウザ表示：タブバーとの間に隙間を作らない） */
 #map {
   width:100%;
-  /* ② フッターエリアを下げた分、地図の高さを拡張。
-     ただしGoogleの著作権表示（Google/利用規約）が隠れないよう、
-     タブバーとの間に約8pxの表示余白を残す。 */
-  height:calc(100dvh - 158px - env(safe-area-inset-top, 0px));
+  height:calc(100dvh - 165px - env(safe-area-inset-top, 0px));
   margin-top:calc(112px + env(safe-area-inset-top, 0px));
+}
+
+/* ホーム画面起動（スタンドアロン）時のみ：
+   タブバーが下に移動した分、Googleの著作権表示のための
+   余白（今回はさらに広めに約20px）を残しつつ地図を拡張 */
+html.is-standalone #map {
+  height:calc(100dvh - 151px - env(safe-area-inset-top, 0px));
 }
 
 /* 現在地ボタン・再読み込みボタン */
@@ -223,12 +227,10 @@ button {
   z-index: 1;
 }
 
-/* 下タブ */
+/* 下タブ（デフォルト＝ブラウザ表示） */
 .tab-bar {
   position: absolute;
-  /* ② フッターエリア全体を固定値で少し下げ、その分だけ地図領域を拡張する。
-     高さ（53px）は変更しない。（-15px→-23pxへ再調整） */
-  bottom: -23px;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 53px;
@@ -245,6 +247,12 @@ button {
     #388e3c 22px,
     #388e3c 44px
   );
+}
+
+/* ホーム画面起動（スタンドアロン）時のみ：
+   実機のセーフエリア問題対策として、タブバーを少し下げる */
+html.is-standalone .tab-bar {
+  bottom: -23px;
 }
 
 .tab-item {
@@ -266,12 +274,12 @@ button {
 }
 
 /* 店舗カード */
+/* 店舗カード（デフォルト＝ブラウザ表示） */
 .bottom-sheet {
   position: absolute;
   left: 10px;
   right: 10px;
-  /* タブバーが-23pxに変更されたため、上端(30px)+10pxの間隔に合わせる */
-  bottom: 40px;
+  bottom: 63px;
   background: white;
   border-radius: 20px 20px 0 0;
   padding: 24px 16px 16px 16px;
@@ -281,6 +289,12 @@ button {
   overflow-y: auto;
   transition: .3s;
   touch-action: none;
+}
+
+/* ホーム画面起動（スタンドアロン）時のみ：
+   タブバーの新しい上端（-23px+53px=30px）+10pxの間隔に合わせる */
+html.is-standalone .bottom-sheet {
+  bottom: 40px;
 }
 
 .bottom-sheet.open {
