@@ -90,10 +90,10 @@ body {
    タブバーが下に移動した分、Googleの著作権表示のための
    余白（今回はさらに広めに約20px）を残しつつ地図を拡張 */
 html.is-standalone #map {
-  /* ① タブバーの位置は変更せず、地図の高さだけを調整して
-     Googleの著作権表示（Google/利用規約）が隠れないよう
-     タブバー上端との間に十分な余白を確保する */
-  height:calc(100dvh - 170px - env(safe-area-inset-top, 0px));
+  /* ① タブバーの位置・アイコンは変更せず、地図の高さだけを調整して
+     Googleの著作権表示（Google/利用規約）が確実に見えるよう
+     タブバー上端との間に大きめの余白を確保する（170px→200px） */
+  height:calc(100dvh - 200px - env(safe-area-inset-top, 0px));
 }
 
 /* 現在地ボタン・再読み込みボタン */
@@ -280,25 +280,8 @@ html.is-standalone .tab-bar::after {
   height: 40px;
 }
 
-/* 地図とタブバーの間の隙間（約28px）のうち、タブバー側の際（12px分）
-   だけを埋める。Google著作権表示が地図下端付近からはみ出す可能性を
-   考慮し、地図側には安全マージン（約16px）をあえて残している。 */
-html.is-standalone .tab-bar::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    #1b5e20 0px,
-    #1b5e20 22px,
-    #388e3c 22px,
-    #388e3c 44px
-  );
-  top: -12px;
-  height: 12px;
-}
-
+/* ※地図とタブバーの間の隙間を緑色で埋める対応は、Google著作権表示が
+   隠れる原因になったため撤去済み（今後は#map側の余白調整のみで対応）。 */
 .tab-item {
   text-align: center;
   font-size: 11px;
