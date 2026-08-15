@@ -1,6 +1,6 @@
 /* Firebase */
 const firebaseConfig = {
-  apiKey: "AIzaSyCT8IjSyBtHPAGKe7U5RA9yzeRmXmOI844",
+  apiKey: "MY KEY",
   authDomain: "supportanowa.firebaseapp.com",
   projectId: "supportanowa",
   storageBucket: "supportanowa.firebasestorage.app",
@@ -62,6 +62,17 @@ function distanceKm(lat1, lng1, lat2, lng2) {
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLng / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/* ── 中心座標＋半径(km)から地図の表示範囲(LatLngBounds)を算出 ──
+   ②「周辺の店舗を表示」で、stadium.radiusを表示範囲の基準として使用 */
+function boundsFromRadius(lat, lng, radiusKm) {
+  const latDelta = radiusKm / 111; // 1度 ≈ 111km
+  const lngDelta = radiusKm / (111 * Math.cos(lat * Math.PI / 180));
+  return new google.maps.LatLngBounds(
+    { lat: lat - latDelta, lng: lng - lngDelta },
+    { lat: lat + latDelta, lng: lng + lngDelta }
+  );
 }
 
 /* ── localStorage 保存機能 ── */
@@ -141,9 +152,6 @@ window.initMap = function () {
   let stadiumMarkers = [];
   let showGeneral    = true;
   let showStadiums   = true;
-  // ④「周辺の店舗を表示」が押された際、対象スタジアムを保持し、
-  //   その半径（stadium.radius）内の店舗・スタジアムのみに絞り込む
-  let areaFilterStadium = null;
 
   /* ── ①② 出発地管理 ── */
   let originData = null; // { lat, lng, name }
@@ -257,10 +265,7 @@ window.initMap = function () {
   function updateClearBtn() {
     searchClearBtn.style.display = searchInput.value.length > 0 ? "block" : "none";
   }
-  searchClearBtn.addEventListener("click", () => {
-    areaFilterStadium = null; // ④ ユーザーによる明示的なクリア操作なので周辺表示モードも解除
-    clearSearch();
-  });
+  searchClearBtn.addEventListener("click", clearSearch);
   function clearSearch() {
     searchInput.value = "";
     updateClearBtn();
@@ -319,16 +324,16 @@ window.initMap = function () {
         showGeneral = true;
         const generalTab = document.getElementById("generalTab");
         if (generalTab) generalTab.style.opacity = "1";
-        // ④ このスタジアムを基準に、半径（stadium.radius）内の
-        //   店舗・スタジアムのみに絞り込む「周辺表示モード」をON
-        areaFilterStadium = stadium;
         // ② 検索ボックスと検索結果をクリアしてから再描画
         //    （検索キーワードが残っていると店舗のcategory/team検索に
         //      ヒットせず、周辺の一般店舗や他スタジアムが表示されない不具合対策）
         clearSearch();
-        // 半径に応じたズームレベルでスタジアムを中心に表示
-        map.setCenter({ lat: Number(stadium.lat), lng: Number(stadium.lng) });
-        map.setZoom(zoom);
+        // ② ピン自体は絞り込まず、stadium.radius を「表示範囲」の
+        //   基準として使い、その範囲がちょうど収まるようfitBoundsする
+        map.fitBounds(boundsFromRadius(
+          Number(stadium.lat), Number(stadium.lng),
+          Number(stadium.radius) || 3
+        ));
         closeCard();
       };
 
@@ -457,19 +462,11 @@ window.initMap = function () {
     const variants = keyword ? normalizeKeyword(keyword) : [];
 
     // ① 検索ボックスは shops.category / shops.team も検索対象とする
+    //   （ピンの絞り込みは検索キーワード・タブのみで行う）
     allShops.filter(shop => {
       if (!shop.published) return false;
       // verified=falseのサポーター歓迎店は一般店舗と同一の表示条件とする
       if (isEffectiveGeneral(shop) && !showGeneral) return false;
-      // ④ 周辺表示モード中は、対象スタジアムの半径内の店舗のみに絞り込む
-      if (areaFilterStadium) {
-        const radius = Number(areaFilterStadium.radius) || 3;
-        const d = distanceKm(
-          Number(areaFilterStadium.lat), Number(areaFilterStadium.lng),
-          Number(shop.lat), Number(shop.lng)
-        );
-        if (d > radius) return false;
-      }
       if (variants.length) {
         return (
           matchField(shop.category, variants) ||
@@ -495,20 +492,6 @@ window.initMap = function () {
     }
 
     const filtered = allStadiums.filter(s => {
-      // ④ 周辺表示モード中は、対象スタジアム自身は表示しつつ、
-      //   その半径内にある他のスタジアムのみに絞り込む
-      if (areaFilterStadium) {
-        if (s.placeid === areaFilterStadium.placeid) {
-          // 対象スタジアム自身は距離0扱いで常に表示
-        } else {
-          const radius = Number(areaFilterStadium.radius) || 3;
-          const d = distanceKm(
-            Number(areaFilterStadium.lat), Number(areaFilterStadium.lng),
-            Number(s.lat), Number(s.lng)
-          );
-          if (d > radius) return false;
-        }
-      }
       if (variants.length) {
         const teamsStr = Array.isArray(s.teams) ? s.teams.join(" ") : (s.teams || "");
         const hit = (
@@ -603,7 +586,6 @@ window.initMap = function () {
   stadiumTab.addEventListener("click", () => {
     showStadiums = !showStadiums;
     stadiumTab.style.opacity = showStadiums ? "1" : "0.5";
-    areaFilterStadium = null; // ④ 周辺表示モードを解除
     clearSearch();
     refreshStadiumMarkers();
   });
@@ -614,7 +596,6 @@ window.initMap = function () {
   generalTab.addEventListener("click", () => {
     showGeneral = !showGeneral;
     generalTab.style.opacity = showGeneral ? "1" : "0.5";
-    areaFilterStadium = null; // ④ 周辺表示モードを解除
     clearSearch();
     refreshShopMarkers();
   });
@@ -719,7 +700,11 @@ window.initMap = function () {
   function renderListView() {
     listViewList.innerHTML = "";
 
-    const stadiumItems = stadiumMarkers.map(m => {
+    // 現在の地図表示範囲内にあるマーカーのみを対象とする
+    const bounds = map.getBounds();
+    const isVisible = m => !bounds || bounds.contains(m.getPosition());
+
+    const stadiumItems = stadiumMarkers.filter(isVisible).map(m => {
       const st = m.stadiumData;
       const displayName = (st.subname && st.subname.trim()) ? st.subname : st.name;
       return {
@@ -730,7 +715,7 @@ window.initMap = function () {
       };
     });
 
-    const shopItems = shopMarkers.map(m => {
+    const shopItems = shopMarkers.filter(isVisible).map(m => {
       const shop = m.shopData;
       return {
         type: "shops",
@@ -743,7 +728,7 @@ window.initMap = function () {
     const items = [...stadiumItems, ...shopItems];
 
     if (items.length === 0) {
-      listViewList.innerHTML = '<div class="saved-empty">現在表示中の店舗・スタジアムはありません</div>';
+      listViewList.innerHTML = '<div class="saved-empty">現在の表示範囲内に店舗・スタジアムはありません</div>';
       return;
     }
 
@@ -797,7 +782,6 @@ window.initMap = function () {
 
   /* ── 検索バー入力 ── */
   searchInput.addEventListener("input", () => {
-    areaFilterStadium = null; // ④ ユーザーが自分で検索した場合は周辺表示モードを解除
     updateClearBtn();
     refreshAllMarkers();
     fitToSearchResults(); // ② 検索後ズーム

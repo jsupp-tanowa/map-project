@@ -1,9 +1,18 @@
-version: 1.1.3
+version: 1.1.4
 release_date: 2026-08-15
-summary: SEO対策改善
+summary: カード動作改善
 
 changes:
-  - サブタイトルの変更
+  - ① ピンの絞り込みを検索・タブのみに戻す
+refreshShopMarkers/refreshStadiumMarkers から stadium.radius による距離フィルタ(areaFilterStadium)を完全に撤廃しました。マーカーの生成は「検索キーワード」「タブ(スタジアム/一般店舗)」のみで判定されます。
+
+② 「周辺の店舗を表示」は表示範囲(fitBounds)のみを変更
+新設した boundsFromRadius(lat, lng, radiusKm) で、スタジアムの座標と stadium.radius から矩形の表示範囲を算出し、map.fitBounds() で地図をその範囲にぴったり合わせるようにしました。ピン自体の絞り込みは行いません。
+
+リスト表示は常に「現在の地図表示範囲内」基準に
+renderListView() で map.getBounds() を取得し、bounds.contains(marker位置) で現在画面に写っているマーカーのみをリスト化するようにしました。これにより、「周辺の店舗を表示」を使った直後はその範囲にfitBoundsされているため自然と絞り込まれたリストになり、通常時はユーザーが地図をドラッグ・ズームした状態がそのままリストに反映されます。
+
+不要になった areaFilterStadium 関連のリセット処理(検索・タブ切り替え時)もすべて削除済みです。実機でご確認をお願いします。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
