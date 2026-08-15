@@ -312,7 +312,12 @@ html.is-standalone .tab-bar::after {
   padding: 24px 16px 0 16px;
   z-index: 999;
   box-shadow: 0 -2px 15px rgba(0,0,0,.2);
+  /* ② flexboxの仕様上、heightを具体的な数値で固定しないと内部の
+     スクロール領域（.card-scroll-area）が正しく機能しないため、
+     開閉状態にかかわらず常に高さを固定する */
+  height: 70vh;
   max-height: 70vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: .3s;
