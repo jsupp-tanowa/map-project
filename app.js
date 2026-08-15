@@ -51,6 +51,19 @@ function matchField(field, variants) {
   return variants.some(v => field.toLowerCase().includes(v));
 }
 
+/* ── 2点間の距離（km）を計算（haversine公式） ──
+   ④「周辺の店舗を表示」の半径フィルタで使用 */
+function distanceKm(lat1, lng1, lat2, lng2) {
+  const R = 6371; // 地球の半径(km)
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 /* ── localStorage 保存機能 ── */
 const SAVE_KEY = "supportanowa_saved";
 
@@ -128,6 +141,9 @@ window.initMap = function () {
   let stadiumMarkers = [];
   let showGeneral    = true;
   let showStadiums   = true;
+  // ④「周辺の店舗を表示」が押された際、対象スタジアムを保持し、
+  //   その半径（stadium.radius）内の店舗・スタジアムのみに絞り込む
+  let areaFilterStadium = null;
 
   /* ── ①② 出発地管理 ── */
   let originData = null; // { lat, lng, name }
@@ -179,11 +195,10 @@ window.initMap = function () {
 
   /* ── カード ── */
   function openCard() {
-    document.getElementById("shopCard").style.display = "block";
+    document.getElementById("shopCard").style.display = "flex";
   }
   function closeCard() {
     const card = document.getElementById("shopCard");
-    card.classList.remove("open");
     card.style.display = "none";
     setGoHereBtnEnabled(false);
     currentDestination = null;
@@ -242,7 +257,10 @@ window.initMap = function () {
   function updateClearBtn() {
     searchClearBtn.style.display = searchInput.value.length > 0 ? "block" : "none";
   }
-  searchClearBtn.addEventListener("click", clearSearch);
+  searchClearBtn.addEventListener("click", () => {
+    areaFilterStadium = null; // ④ ユーザーによる明示的なクリア操作なので周辺表示モードも解除
+    clearSearch();
+  });
   function clearSearch() {
     searchInput.value = "";
     updateClearBtn();
@@ -301,13 +319,16 @@ window.initMap = function () {
         showGeneral = true;
         const generalTab = document.getElementById("generalTab");
         if (generalTab) generalTab.style.opacity = "1";
+        // ④ このスタジアムを基準に、半径（stadium.radius）内の
+        //   店舗・スタジアムのみに絞り込む「周辺表示モード」をON
+        areaFilterStadium = stadium;
         // ② 検索ボックスと検索結果をクリアしてから再描画
         //    （検索キーワードが残っていると店舗のcategory/team検索に
         //      ヒットせず、周辺の一般店舗や他スタジアムが表示されない不具合対策）
         clearSearch();
-        // 都道府県レベル（zoom 10）でスタジアムを中心に表示
+        // 半径に応じたズームレベルでスタジアムを中心に表示
         map.setCenter({ lat: Number(stadium.lat), lng: Number(stadium.lng) });
-        map.setZoom(10);
+        map.setZoom(zoom);
         closeCard();
       };
 
@@ -440,6 +461,15 @@ window.initMap = function () {
       if (!shop.published) return false;
       // verified=falseのサポーター歓迎店は一般店舗と同一の表示条件とする
       if (isEffectiveGeneral(shop) && !showGeneral) return false;
+      // ④ 周辺表示モード中は、対象スタジアムの半径内の店舗のみに絞り込む
+      if (areaFilterStadium) {
+        const radius = Number(areaFilterStadium.radius) || 3;
+        const d = distanceKm(
+          Number(areaFilterStadium.lat), Number(areaFilterStadium.lng),
+          Number(shop.lat), Number(shop.lng)
+        );
+        if (d > radius) return false;
+      }
       if (variants.length) {
         return (
           matchField(shop.category, variants) ||
@@ -465,6 +495,20 @@ window.initMap = function () {
     }
 
     const filtered = allStadiums.filter(s => {
+      // ④ 周辺表示モード中は、対象スタジアム自身は表示しつつ、
+      //   その半径内にある他のスタジアムのみに絞り込む
+      if (areaFilterStadium) {
+        if (s.placeid === areaFilterStadium.placeid) {
+          // 対象スタジアム自身は距離0扱いで常に表示
+        } else {
+          const radius = Number(areaFilterStadium.radius) || 3;
+          const d = distanceKm(
+            Number(areaFilterStadium.lat), Number(areaFilterStadium.lng),
+            Number(s.lat), Number(s.lng)
+          );
+          if (d > radius) return false;
+        }
+      }
       if (variants.length) {
         const teamsStr = Array.isArray(s.teams) ? s.teams.join(" ") : (s.teams || "");
         const hit = (
@@ -559,6 +603,7 @@ window.initMap = function () {
   stadiumTab.addEventListener("click", () => {
     showStadiums = !showStadiums;
     stadiumTab.style.opacity = showStadiums ? "1" : "0.5";
+    areaFilterStadium = null; // ④ 周辺表示モードを解除
     clearSearch();
     refreshStadiumMarkers();
   });
@@ -569,6 +614,7 @@ window.initMap = function () {
   generalTab.addEventListener("click", () => {
     showGeneral = !showGeneral;
     generalTab.style.opacity = showGeneral ? "1" : "0.5";
+    areaFilterStadium = null; // ④ 周辺表示モードを解除
     clearSearch();
     refreshShopMarkers();
   });
@@ -751,6 +797,7 @@ window.initMap = function () {
 
   /* ── 検索バー入力 ── */
   searchInput.addEventListener("input", () => {
+    areaFilterStadium = null; // ④ ユーザーが自分で検索した場合は周辺表示モードを解除
     updateClearBtn();
     refreshAllMarkers();
     fitToSearchResults(); // ② 検索後ズーム
@@ -906,22 +953,6 @@ window.initMap = function () {
 
   /* ── カード閉じる ── */
   document.getElementById("closeCardBtn").addEventListener("click", closeCard);
-
-  /* ── bottom-sheet スワイプ ──
-     ② スクロールエリアでのタッチ操作と干渉しないよう、
-     取っ手・店名を含むヘッダー部分（.card-header）のみで検知する */
-  const card       = document.getElementById("shopCard");
-  const cardHeader = document.querySelector(".card-header");
-  let startY = 0;
-  cardHeader.addEventListener("touchstart", e => { startY = e.touches[0].clientY; });
-  cardHeader.addEventListener("touchend", e => {
-    const diff = startY - e.changedTouches[0].clientY;
-    if (diff > 50) card.classList.add("open");
-    if (diff < -50) {
-      card.classList.remove("open");
-      setTimeout(() => { card.style.display = "none"; }, 300);
-    }
-  });
 
   /* ── 初期位置情報取得 ── */
   if (navigator.geolocation) {
