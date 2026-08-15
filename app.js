@@ -185,40 +185,34 @@ window.initMap = function () {
     const card = document.getElementById("shopCard");
     card.classList.remove("open");
     card.style.display = "none";
-    setRouteTabEnabled(false);
+    setGoHereBtnEnabled(false);
     currentDestination = null;
     if (setOriginChk) setOriginChk.checked = false;
   }
 
-  /* ④ 経路検索タブ有効/無効 */
-  const routeTab = document.getElementById("routeTab");
-  function setRouteTabEnabled(enabled) {
-    if (enabled) {
-      routeTab.classList.remove("tab-disabled");
-      routeTab.style.opacity = "1";
-    } else {
-      routeTab.classList.add("tab-disabled");
-      routeTab.style.opacity = "0.4";
-    }
+  /* ① 「ここに行く」ボタン有効/無効（旧・経路検索タブと同一機能） */
+  const goHereBtn = document.getElementById("goHereBtn");
+  function setGoHereBtnEnabled(enabled) {
+    goHereBtn.disabled = !enabled;
   }
 
-  // ① 目的地（開いているカード）と出発地が同一の場合は無効化する
+  // 目的地（開いているカード）と出発地が同一の場合は無効化する
   function updateRouteTabState() {
     const isSameAsOrigin =
       originData &&
       currentDestination &&
       originData.placeid === currentDestination.placeid;
-    setRouteTabEnabled(!!currentDestination && !isSameAsOrigin);
+    setGoHereBtnEnabled(!!currentDestination && !isSameAsOrigin);
   }
 
-  setRouteTabEnabled(false);
+  setGoHereBtnEnabled(false);
 
-  /* 経路検索実行 */
-  routeTab.addEventListener("click", () => {
+  /* 経路検索実行（① カード内「ここに行く」ボタンから呼び出し） */
+  function executeRouteSearch() {
     if (!currentDestination) return;
 
-    // ① 出発地と目的地が同一の場合は経路検索を行わない
-    //    （ボタン自体は無効化されるが、念のための二重チェック）
+    // 出発地と目的地が同一の場合は経路検索を行わない
+    //（ボタン自体は無効化されるが、念のための二重チェック）
     if (originData && originData.placeid === currentDestination.placeid) {
       alert("出発地と目的地が同じため、経路検索できません。\n出発地チェックを外すか、別の場所を出発地に設定してください。");
       return;
@@ -237,7 +231,9 @@ window.initMap = function () {
       : `https://www.google.com/maps/dir/?api=1&destination=${destName}&destination_place_id=${destPlaceId}&travelmode=transit`;
 
     openExternalMapLink(url);
-  });
+  }
+
+  goHereBtn.addEventListener("click", executeRouteSearch);
 
   /* ── 検索バークリア ── */
   const searchInput    = document.getElementById("searchInput");
@@ -291,8 +287,9 @@ window.initMap = function () {
       // ⑤ 注意文言はスタジアムカードでは非表示
       document.getElementById("shopNotice").style.display = "none";
 
-      const imgEl = document.getElementById("shopImage");
-      imgEl.src = ""; imgEl.style.display = "none";
+      const gallery = document.getElementById("shopImageGallery");
+      gallery.innerHTML = "";
+      gallery.style.display = "none";
 
       document.querySelector(".detail-btn").onclick = () => {
         openExternalMapLink(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stadium.name)}&query_place_id=${stadium.placeid}`);
@@ -334,6 +331,7 @@ window.initMap = function () {
       document.getElementById("showAreaBtn").style.display = "block";
     });
 
+    marker.stadiumData = stadium;
     stadiumMarkers.push(marker);
     return marker;
   }
@@ -346,6 +344,15 @@ window.initMap = function () {
   function isEffectiveGeneral(shop) {
     if (shop.supportLevel === 0) return true;
     return shop.verified === false;
+  }
+
+  /* ── 店舗画像取得 ──
+     shops.images（配列・新形式）を優先し、無ければ
+     shops.image（単数・旧形式）を後方互換としてサポートする。 */
+  function getShopImages(shop) {
+    if (Array.isArray(shop.images) && shop.images.length) return shop.images;
+    if (shop.image) return [shop.image];
+    return [];
   }
 
   /* ── 店舗マーカー作成 ── */
@@ -385,11 +392,16 @@ window.initMap = function () {
       // ⑤ 注意文言は店舗カードのみ表示
       document.getElementById("shopNotice").style.display = "block";
 
-      const imgEl = document.getElementById("shopImage");
-      if (isSupporter && shop.image) {
-        imgEl.src = shop.image; imgEl.style.display = "block";
+      const gallery = document.getElementById("shopImageGallery");
+      const images = isSupporter ? getShopImages(shop) : [];
+      if (images.length) {
+        gallery.innerHTML = images
+          .map(url => `<img src="${url}" class="shop-image-item" alt="">`)
+          .join("");
+        gallery.style.display = "flex";
       } else {
-        imgEl.src = ""; imgEl.style.display = "none";
+        gallery.innerHTML = "";
+        gallery.style.display = "none";
       }
       document.querySelector(".detail-btn").onclick = () => {
         openExternalMapLink(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name)}&query_place_id=${shop.placeid}`);
@@ -410,6 +422,7 @@ window.initMap = function () {
       document.getElementById("showAreaBtn").style.display = "none";
     });
 
+    marker.shopData = shop;
     shopMarkers.push(marker);
     return marker;
   }
@@ -649,6 +662,80 @@ window.initMap = function () {
     savedScreen.style.display = "none";
   });
 
+  /* ── タブ：リスト表示（③ 旧・経路検索タブの代替機能） ──
+     現在地図上に表示されている（検索・絞り込み後の）店舗・スタジアムを
+     一覧表示する。項目タップでそのピンのクリックと同じ動作を発火させる。 */
+  const listTab    = document.getElementById("listTab");
+  const listScreen = document.getElementById("listScreen");
+  const listViewList = document.getElementById("listViewList");
+  const closeListBtn = document.getElementById("closeListBtn");
+
+  function renderListView() {
+    listViewList.innerHTML = "";
+
+    const stadiumItems = stadiumMarkers.map(m => {
+      const st = m.stadiumData;
+      const displayName = (st.subname && st.subname.trim()) ? st.subname : st.name;
+      return {
+        type: "stadiums",
+        marker: m,
+        name: displayName,
+        sub: Array.isArray(st.teams) ? st.teams.join(" / ") : ""
+      };
+    });
+
+    const shopItems = shopMarkers.map(m => {
+      const shop = m.shopData;
+      return {
+        type: "shops",
+        marker: m,
+        name: shop.name,
+        sub: shop.category || ""
+      };
+    });
+
+    const items = [...stadiumItems, ...shopItems];
+
+    if (items.length === 0) {
+      listViewList.innerHTML = '<div class="saved-empty">現在表示中の店舗・スタジアムはありません</div>';
+      return;
+    }
+
+    items.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "saved-item";
+
+      const icon = item.type === "stadiums" ? "⚽" : "🏪";
+
+      row.innerHTML = `
+        <div class="saved-item-main">
+          <span class="saved-item-icon">${icon}</span>
+          <div class="saved-item-text">
+            <span class="saved-item-name">${item.name}</span>
+            <span class="saved-item-sub">${item.sub}</span>
+          </div>
+        </div>
+      `;
+
+      // 項目タップ → リストを閉じて地図上のピンと同じ動作（カード表示）
+      row.querySelector(".saved-item-main").addEventListener("click", () => {
+        listScreen.style.display = "none";
+        google.maps.event.trigger(item.marker, "click");
+      });
+
+      listViewList.appendChild(row);
+    });
+  }
+
+  listTab.addEventListener("click", () => {
+    renderListView();
+    listScreen.style.display = "flex";
+  });
+
+  closeListBtn.addEventListener("click", () => {
+    listScreen.style.display = "none";
+  });
+
   /* ── ヘルプ（使い方）画面 ── */
   const helpBtn      = document.getElementById("helpBtn");
   const helpScreen   = document.getElementById("helpScreen");
@@ -820,11 +907,14 @@ window.initMap = function () {
   /* ── カード閉じる ── */
   document.getElementById("closeCardBtn").addEventListener("click", closeCard);
 
-  /* ── bottom-sheet スワイプ ── */
-  const card = document.getElementById("shopCard");
+  /* ── bottom-sheet スワイプ ──
+     ② スクロールエリアでのタッチ操作と干渉しないよう、
+     取っ手・店名を含むヘッダー部分（.card-header）のみで検知する */
+  const card       = document.getElementById("shopCard");
+  const cardHeader = document.querySelector(".card-header");
   let startY = 0;
-  card.addEventListener("touchstart", e => { startY = e.touches[0].clientY; });
-  card.addEventListener("touchend", e => {
+  cardHeader.addEventListener("touchstart", e => { startY = e.touches[0].clientY; });
+  cardHeader.addEventListener("touchend", e => {
     const diff = startY - e.changedTouches[0].clientY;
     if (diff > 50) card.classList.add("open");
     if (diff < -50) {
