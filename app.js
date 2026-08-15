@@ -1,6 +1,6 @@
 /* Firebase */
 const firebaseConfig = {
-  apiKey: "MY KEY",
+  apiKey: "AIzaSyCT8IjSyBtHPAGKe7U5RA9yzeRmXmOI844",
   authDomain: "supportanowa.firebaseapp.com",
   projectId: "supportanowa",
   storageBucket: "supportanowa.firebasestorage.app",
@@ -373,11 +373,18 @@ window.initMap = function () {
   }
 
   /* ── 店舗画像取得 ──
-     shops.images（配列・新形式）を優先し、無ければ
-     shops.image（単数・旧形式）を後方互換としてサポートする。 */
+     shops.image（単数フィールド）にカンマ区切りで複数URLを設定する
+     方式に対応（例: "https://a.jpg,https://b.jpg"）。
+     従来のshops.images（配列）が設定されている場合はそちらを優先する
+     （後方互換）。 */
   function getShopImages(shop) {
     if (Array.isArray(shop.images) && shop.images.length) return shop.images;
-    if (shop.image) return [shop.image];
+    if (shop.image) {
+      return shop.image
+        .split(",")
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
+    }
     return [];
   }
 
@@ -707,11 +714,12 @@ window.initMap = function () {
     const stadiumItems = stadiumMarkers.filter(isVisible).map(m => {
       const st = m.stadiumData;
       const displayName = (st.subname && st.subname.trim()) ? st.subname : st.name;
+      const teamsStr = Array.isArray(st.teams) ? st.teams.join(" / ") : "";
       return {
         type: "stadiums",
         marker: m,
         name: displayName,
-        sub: Array.isArray(st.teams) ? st.teams.join(" / ") : ""
+        sub: [st.prefecture, teamsStr].filter(Boolean).join(" ・ ")
       };
     });
 
@@ -721,7 +729,7 @@ window.initMap = function () {
         type: "shops",
         marker: m,
         name: shop.name,
-        sub: shop.category || ""
+        sub: [shop.prefecture, shop.category].filter(Boolean).join(" ・ ")
       };
     });
 
