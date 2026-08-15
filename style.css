@@ -284,7 +284,7 @@ html.is-standalone .tab-bar::after {
    隠れる原因になったため撤去済み（今後は#map側の余白調整のみで対応）。 */
 .tab-item {
   text-align: center;
-  font-size: 11px;
+  font-size: 13px;
   color: white;
   text-shadow: 0 1px 3px rgba(0,0,0,.5);
   font-family: "Zen Kaku Gothic New", sans-serif;
@@ -312,13 +312,11 @@ html.is-standalone .tab-bar::after {
   padding: 24px 16px 0 16px;
   z-index: 999;
   box-shadow: 0 -2px 15px rgba(0,0,0,.2);
-  /* ③ 高さは内容に応じて自動調整（マップ上のスタジアム位置が
-     見えなくなるほど高さを固定しない）。上限のみ設定し、
-     内容が収まらない場合は.card-scroll-area側でスクロールする。
-     以前スクロールが機能しなかった原因はJS側でdisplay:blockを
-     指定しflexが無効化されていたことだったため、displayをflexに
-     修正した上で高さ固定は撤廃した。 */
-  max-height: 50vh;
+  /* ① 高さは内容に応じて自動調整。最大は地図エリアを埋める高さまで
+     広がるようにする（歓迎店など情報量の多いカードはこの上限まで
+     広がりスクロールが機能し、情報の少ない一般店舗は自然と
+     半分以下の高さに収まる）。 */
+  max-height: calc(100dvh - 175px - env(safe-area-inset-top, 0px));
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -344,6 +342,7 @@ html.is-standalone .tab-bar::after {
    タブバーの新しい上端（-23px+53px=30px）+10pxの間隔に合わせる */
 html.is-standalone .bottom-sheet {
   bottom: 40px;
+  max-height: calc(100dvh - 200px - env(safe-area-inset-top, 0px));
 }
 
 /* 取っ手 */
@@ -501,33 +500,42 @@ html.is-standalone .bottom-sheet {
 }
 
 /* 出発地ボタン（保存ボタンと高さ・フォントを揃える） */
-.origin-toggle-btn {
+/* ③ 出発地・ここに行く・お気に入り 共通ベーススタイル
+   （デザインは統一し、配色のみボタンごとに変える） */
+.origin-toggle-btn,
+.go-here-btn,
+.save-toggle-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 13px;
   padding: 8px 12px;
   border-radius: 20px;
-  background: #f0f7ff;
-  color: #2c5f9e;
-  border: 1px solid #b3d4f5;
   cursor: pointer;
   font-family: "M PLUS 1p", sans-serif;
   user-select: none;
   box-shadow: none;
   line-height: 1;
+  white-space: nowrap;
 }
 
-/* ① ここに行くボタン（経路検索と同一機能・条件） */
+.origin-toggle-btn {
+  background: #f0f7ff;
+  color: #2c5f9e;
+  border: 1px solid #b3d4f5;
+}
+
 .go-here-btn {
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 20px;
   background: #e8f0fe;
   color: #1a56c4;
-  box-shadow: none;
   border: 1px solid #aac6f7;
-  white-space: nowrap;
+}
+
+.save-toggle-btn {
+  background: #fff8e1;
+  color: #b8860b;
+  border: 1px solid #f0d98c;
 }
 
 .go-here-btn:disabled {
@@ -547,17 +555,6 @@ html.is-standalone .bottom-sheet {
   background: #bbdefb;
   color: #1a3f6f;
   border-color: #90caf9;
-}
-
-.save-toggle-btn {
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  background: #fff8e1;
-  color: #b8860b;
-  box-shadow: none;
-  border: 1px solid #f0d98c;
-  white-space: nowrap;
 }
 
 .save-toggle-btn.saved {
