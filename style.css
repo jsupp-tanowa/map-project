@@ -312,22 +312,22 @@ html.is-standalone .tab-bar::after {
   padding: 24px 16px 0 16px;
   z-index: 999;
   box-shadow: 0 -2px 15px rgba(0,0,0,.2);
-  /* ② flexboxの仕様上、heightを具体的な数値で固定しないと内部の
-     スクロール領域（.card-scroll-area）が正しく機能しないため、
-     開閉状態にかかわらず常に高さを固定する */
-  height: 70vh;
-  max-height: 70vh;
+  /* ③ 高さは内容に応じて自動調整（マップ上のスタジアム位置が
+     見えなくなるほど高さを固定しない）。上限のみ設定し、
+     内容が収まらない場合は.card-scroll-area側でスクロールする。
+     以前スクロールが機能しなかった原因はJS側でdisplay:blockを
+     指定しflexが無効化されていたことだったため、displayをflexに
+     修正した上で高さ固定は撤廃した。 */
+  max-height: 50vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: .3s;
 }
 
-/* ヘッダー（取っ手・閉じるボタン・店名）は常に固定表示、
-   スワイプでの開閉ジェスチャーもこの範囲のみで検知する */
+/* ヘッダー（取っ手・閉じるボタン・店名）は常に固定表示 */
 .card-header {
   flex-shrink: 0;
-  touch-action: none;
 }
 
 /* ② 店名を除く下部エリアはカード内スクロールを可能にする */
@@ -344,10 +344,6 @@ html.is-standalone .tab-bar::after {
    タブバーの新しい上端（-23px+53px=30px）+10pxの間隔に合わせる */
 html.is-standalone .bottom-sheet {
   bottom: 40px;
-}
-
-.bottom-sheet.open {
-  height: 70vh;
 }
 
 /* 取っ手 */
@@ -386,8 +382,9 @@ html.is-standalone .bottom-sheet {
 .detail-btn {
   position: sticky;
   bottom: 0;
-  margin-top: 28px;
-  width: 100%;
+  margin: 28px auto 0;
+  display: block;
+  width: 65%;
   font-size: 14px;
   padding: 8px 12px;
 }
@@ -395,8 +392,8 @@ html.is-standalone .bottom-sheet {
 /* 周辺表示ボタン */
 .show-area-btn {
   display: block;
-  width: 100%;
-  margin-top: 10px;
+  width: 65%;
+  margin: 10px auto 0;
   padding: 8px 12px;
   font-size: 12px;
   font-family: "M PLUS 1p", sans-serif;
@@ -495,6 +492,12 @@ html.is-standalone .bottom-sheet {
   align-items: stretch;
   margin-top: 8px;
   gap: 8px;
+}
+
+/* ① お気に入りボタンを出発地・ここに行くとは別の2行目に配置 */
+.card-action-row-secondary {
+  display: flex;
+  margin-top: 8px;
 }
 
 /* 出発地ボタン（保存ボタンと高さ・フォントを揃える） */
