@@ -309,13 +309,30 @@ html.is-standalone .tab-bar::after {
   bottom: 63px;
   background: white;
   border-radius: 20px 20px 0 0;
-  padding: 24px 16px 16px 16px;
+  padding: 24px 16px 0 16px;
   z-index: 999;
   box-shadow: 0 -2px 15px rgba(0,0,0,.2);
   max-height: 70vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   transition: .3s;
+}
+
+/* ヘッダー（取っ手・閉じるボタン・店名）は常に固定表示、
+   スワイプでの開閉ジェスチャーもこの範囲のみで検知する */
+.card-header {
+  flex-shrink: 0;
   touch-action: none;
+}
+
+/* ② 店名を除く下部エリアはカード内スクロールを可能にする */
+.card-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 /* ホーム画面起動（スタンドアロン）時のみ：
@@ -407,13 +424,24 @@ html.is-standalone .bottom-sheet {
   z-index: 1000;
 }
 
-.shop-image {
-  width: 100%;
+.shop-image-gallery {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shop-image-item {
+  flex: 0 0 auto;
+  width: 85%;
+  max-width: 320px;
   height: 140px;
   object-fit: cover;
   border-radius: 12px;
-  margin-bottom: 10px;
   background: #eee;
+  scroll-snap-align: start;
 }
 
 /* ⑤ 営業時間等の注意文言 */
@@ -454,9 +482,10 @@ html.is-standalone .bottom-sheet {
 }
 
 
-/* カード内アクション行（保存ボタン） */
+/* カード内アクション行（出発地・ここに行く・保存） */
 .card-action-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: stretch;
   margin-top: 8px;
@@ -468,8 +497,8 @@ html.is-standalone .bottom-sheet {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
-  padding: 8px 14px;
+  font-size: 13px;
+  padding: 8px 12px;
   border-radius: 20px;
   background: #f0f7ff;
   color: #2c5f9e;
@@ -479,6 +508,23 @@ html.is-standalone .bottom-sheet {
   user-select: none;
   box-shadow: none;
   line-height: 1;
+}
+
+/* ① ここに行くボタン（経路検索と同一機能・条件） */
+.go-here-btn {
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: #e8f0fe;
+  color: #1a56c4;
+  box-shadow: none;
+  border: 1px solid #aac6f7;
+  white-space: nowrap;
+}
+
+.go-here-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .origin-toggle-btn input[type="checkbox"] {
@@ -496,13 +542,14 @@ html.is-standalone .bottom-sheet {
 }
 
 .save-toggle-btn {
-  font-size: 14px;
-  padding: 8px 14px;
+  font-size: 13px;
+  padding: 8px 12px;
   border-radius: 20px;
   background: #fff8e1;
   color: #b8860b;
   box-shadow: none;
   border: 1px solid #f0d98c;
+  white-space: nowrap;
 }
 
 .save-toggle-btn.saved {
