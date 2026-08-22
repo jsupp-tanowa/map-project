@@ -790,6 +790,9 @@ window.initMap = function () {
 
   /* ── 検索バー入力 ── */
   searchInput.addEventListener("input", () => {
+    // ② カードを開いた状態から検索を始めた場合はカードを閉じる
+    const card = document.getElementById("shopCard");
+    if (card.style.display !== "none") closeCard();
     updateClearBtn();
     refreshAllMarkers();
     fitToSearchResults(); // ② 検索後ズーム
