@@ -376,6 +376,9 @@ html.is-standalone .bottom-sheet {
   width: 65%;
   font-size: 14px;
   padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  color: #333;
   box-shadow: none;
 }
 
@@ -414,6 +417,16 @@ html.is-standalone .bottom-sheet {
   border-radius: 50%;
   color: #888;
   z-index: 1000;
+}
+
+/* ② スワイプ開閉ジェスチャーを廃止したため、カード上部の閉じる
+   ボタンをやや目立つデザインに変更する */
+.card-close-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  background: #f0f0f0;
+  color: #555;
 }
 
 .shop-image-gallery {
@@ -648,6 +661,7 @@ html.is-standalone .bottom-sheet {
 .saved-item-sub {
   font-size: 12px;
   color: #888;
+  font-family: "M PLUS 1p", sans-serif;
 }
 
 .saved-item-remove {
@@ -719,4 +733,74 @@ html.is-standalone .bottom-sheet {
   height: 24px;
   object-fit: contain;
   flex-shrink: 0;
+}
+
+/* ⑤ 初回ピン読み込み中のローディング画面（サッカーボールが弾む演出） */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3000;
+  background: linear-gradient(180deg, #eafaf0 0%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  transition: opacity .4s ease;
+}
+
+.loading-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-ball-area {
+  position: relative;
+  width: 80px;
+  height: 110px;
+}
+
+.loading-ball {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 48px;
+  line-height: 1;
+  animation: loading-ball-bounce 1s cubic-bezier(.5,0,.7,.4) infinite;
+}
+
+.loading-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 46px;
+  height: 10px;
+  transform: translateX(-50%);
+  background: rgba(27,94,32,.25);
+  border-radius: 50%;
+  animation: loading-shadow-scale 1s cubic-bezier(.5,0,.7,.4) infinite;
+}
+
+@keyframes loading-ball-bounce {
+  0%   { top: 0;   }
+  50%  { top: 62px; }
+  100% { top: 0;   }
+}
+
+@keyframes loading-shadow-scale {
+  0%   { transform: translateX(-50%) scale(0.6); opacity: .5; }
+  50%  { transform: translateX(-50%) scale(1);   opacity: .25; }
+  100% { transform: translateX(-50%) scale(0.6); opacity: .5; }
+}
+
+.loading-text {
+  font-size: 14px;
+  font-family: "M PLUS 1p", sans-serif;
+  font-weight: 700;
+  color: #1b5e20;
+  letter-spacing: .5px;
 }

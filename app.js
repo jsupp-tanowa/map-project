@@ -620,14 +620,15 @@ window.initMap = function () {
 
     const shopItems = data.shops.map(placeid => {
       const shop = allShops.find(s => s.placeid === placeid);
-      return shop ? { type: "shops", placeid, name: shop.name, sub: shop.category || "" } : null;
+      return shop ? { type: "shops", placeid, name: shop.name, sub: [shop.prefecture, shop.category].filter(Boolean).join(" ・ ") } : null;
     }).filter(Boolean);
 
     const stadiumItems = data.stadiums.map(placeid => {
       const st = allStadiums.find(s => s.placeid === placeid);
       if (!st) return null;
       const displayName = (st.subname && st.subname.trim()) ? st.subname : st.name;
-      return { type: "stadiums", placeid, name: displayName, sub: Array.isArray(st.teams) ? st.teams.join(" / ") : "" };
+      const teamsStr = Array.isArray(st.teams) ? st.teams.join(" / ") : "";
+      return { type: "stadiums", placeid, name: displayName, sub: [st.prefecture, teamsStr].filter(Boolean).join(" ・ ") };
     }).filter(Boolean);
 
     const items = [...stadiumItems, ...shopItems];
@@ -811,6 +812,14 @@ window.initMap = function () {
   let lastShopsSnapshotAt    = 0;
   let lastStadiumsSnapshotAt = 0;
 
+  /* ⑤ 店舗・スタジアム両方の初回読み込みが完了したらローディング画面を隠す */
+  function hideLoadingOverlayIfReady() {
+    if (lastShopsSnapshotAt > 0 && lastStadiumsSnapshotAt > 0) {
+      const overlay = document.getElementById("loadingOverlay");
+      if (overlay) overlay.classList.add("hide");
+    }
+  }
+
   function subscribeShops() {
     if (unsubShops) { unsubShops(); unsubShops = null; }
     unsubShops = db.collection("shops").onSnapshot(
@@ -820,6 +829,7 @@ window.initMap = function () {
         snapshot.forEach(doc => newData.push(doc.data()));
         allShops = newData;
         refreshShopMarkers();
+        hideLoadingOverlayIfReady();
       },
       err => {
         console.warn("shops onSnapshot エラー:", err);
@@ -832,6 +842,7 @@ window.initMap = function () {
             snapshot.forEach(doc => newData.push(doc.data()));
             allShops = newData;
             refreshShopMarkers();
+            hideLoadingOverlayIfReady();
           }).catch(() => {});
       }
     );
@@ -846,6 +857,7 @@ window.initMap = function () {
         snapshot.forEach(doc => newData.push(doc.data()));
         allStadiums = newData;
         refreshStadiumMarkers();
+        hideLoadingOverlayIfReady();
       },
       err => {
         console.warn("stadiums onSnapshot エラー:", err);
@@ -857,6 +869,7 @@ window.initMap = function () {
             snapshot.forEach(doc => newData.push(doc.data()));
             allStadiums = newData;
             refreshStadiumMarkers();
+            hideLoadingOverlayIfReady();
           }).catch(() => {});
       }
     );
@@ -987,6 +1000,14 @@ window.initMap = function () {
       reloadOnResume();
     }
   }, 6000);
+
+  /* ⑤ 万一データ取得が長時間失敗し続けた場合の保険として、
+     一定時間経過後はローディング画面を強制的に閉じる
+     （地図・再読み込みボタンに手動でアクセスできるようにするため） */
+  setTimeout(() => {
+    const overlay = document.getElementById("loadingOverlay");
+    if (overlay) overlay.classList.add("hide");
+  }, 12000);
 
   /* ── ブラウザのオートフィル対応：ページ読込時にクリアボタン表示を更新 ── */
   updateClearBtn();

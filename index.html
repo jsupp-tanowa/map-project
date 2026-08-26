@@ -38,6 +38,16 @@
 </head>
 
 <body>
+
+<!-- ⑤ 初回ピン読み込み中のローディング画面 -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-ball-area">
+    <div class="loading-ball">⚽</div>
+    <div class="loading-shadow"></div>
+  </div>
+  <div class="loading-text">店舗情報を読み込み中...</div>
+</div>
+
 <header class="app-header">
   <div class="title-row">
     <div class="title">サポたのわ</div>
@@ -90,7 +100,7 @@
   <!-- 店舗カード -->
   <div id="shopCard" class="bottom-sheet" style="display:none;">
     <div class="card-header">
-      <button id="closeCardBtn" class="close-btn">×</button>
+      <button id="closeCardBtn" class="close-btn card-close-btn">×</button>
       <div id="shopName" class="bottom-title">店名</div>
     </div>
     <div class="card-scroll-area">
