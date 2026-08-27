@@ -352,6 +352,10 @@ html.is-standalone .bottom-sheet {
   font-weight: 900;
   color: #222;
   line-height: 26px;
+  /* 拡大した閉じる（×）ボタンと1行目の文字が重ならないよう、
+     全角1文字分（フォントサイズ相当の26px）だけ右側の折り返し幅を狭める */
+  padding-right: 26px;
+  box-sizing: border-box;
 }
 
 .bottom-info {
