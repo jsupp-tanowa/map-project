@@ -137,13 +137,19 @@ function moveToCurrentLocation() {
 /* 地図初期化 */
 window.initMap = function () {
 
+  // ②タッチ操作可能な端末(スマホ等)かどうかを判定。
+  //   タッチ端末はピンチズームができるため、ズームボタンはPCのみ表示する。
+  const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 34.7284, lng: 135.4814 },
     zoom: 11,
     mapTypeControl:    false,
-    zoomControl:       true,
+    zoomControl:       !isTouchDevice,
     streetViewControl: false,
-    fullscreenControl: false
+    fullscreenControl: false,
+    panControl:        false,
+    rotateControl:     false
   });
 
   let allShops       = [];
