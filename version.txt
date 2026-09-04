@@ -1,19 +1,18 @@
-version: 1.2.2
+version: 1.2.3
 release_date: 2026-09-04
-summary: ズームボタン有効化など
+summary: タッチ操作時ズームボタン無効化
 
 changes:
-  - app.js: zoomControl: false → zoomControl: true に変更。Google Maps標準のズーム＋／ーボタンが右下に表示されます。
-style.css: .button-area を right: 10px → left: 10px に変更（bottom: 85px は維持）。現在地ボタン・再読み込みボタンが左下に移動し、標準ズームボタン（右下）と重ならなくなります。
-style.css: .gm-bundled-control, .gm-svpc { display:none !important; } から .gm-bundled-control を除外し、.gm-svpc { display:none !important; } のみ残しました。これによりズームボタンは表示されつつ、ストリートビューのペグマンは引き続き非表示のままです。
+  - ①ズームボタン上部の方向パッド削除
+panControl: false、rotateControl: false を明示的に追加。これらはデフォルトfalseのはずですが、念のため明示することで方向パッド（パンコントロール）を確実に非表示にしています。
 
-renderListView() のリスト項目クリック処理に、お気に入りタブと同じ map.setCenter() + map.setZoom(15) を追加しました。
+②スマホではズームボタンを非表示
+window.matchMedia("(pointer: coarse)").matches でタッチ操作端末（指での操作が主体＝スマホ・タブレット）かどうかを判定し、zoomControl: !isTouchDevice としました。
 
-item.marker は既にマーカーオブジェクトそのものを保持しているので（お気に入り側のように名前でマーカーを検索し直す必要がなく）、item.marker.getPosition() でそのまま中心座標を取得できます。
+PC（マウス操作）→ isTouchDevice = false → ズームボタン表示
+スマホ（タッチ操作）→ isTouchDevice = true → ズームボタン非表示（ピンチズームで操作）
 
-リストを閉じる
-該当ピン位置へ setCenter + ズームレベル15へ setZoom
-マーカーのclickイベントをトリガーしてカードを開く
+pointer: coarse は「主なポインタが指のような精度の低いもの」かを判定するメディアクエリで、マウス/トラックパッドのPCとタッチ操作のスマホ・タブレットを区別する一般的な方法です。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
