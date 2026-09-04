@@ -100,7 +100,7 @@ html.is-standalone #map {
 .button-area {
   position: absolute;
   bottom: 85px;
-  right: 10px;
+  left: 10px;
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -160,8 +160,9 @@ button {
   box-shadow: 0 1px 3px rgba(0,0,0,.15);
 }
 
-/* ①地図移動コントロール非表示 */
-.gm-bundled-control,
+/* ①ストリートビュー(ペグマン)のみ非表示。
+   ズームコントロール(.gm-bundled-control)はzoomControl: trueで
+   表示するため、ここでは対象から除外する */
 .gm-svpc {
   display: none !important;
 }

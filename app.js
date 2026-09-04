@@ -141,7 +141,7 @@ window.initMap = function () {
     center: { lat: 34.7284, lng: 135.4814 },
     zoom: 11,
     mapTypeControl:    false,
-    zoomControl:       false,
+    zoomControl:       true,
     streetViewControl: false,
     fullscreenControl: false
   });
@@ -760,6 +760,8 @@ window.initMap = function () {
       // 項目タップ → リストを閉じて地図上のピンと同じ動作（カード表示）
       row.querySelector(".saved-item-main").addEventListener("click", () => {
         listScreen.style.display = "none";
+        map.setCenter(item.marker.getPosition());
+        map.setZoom(15);
         google.maps.event.trigger(item.marker, "click");
       });
 

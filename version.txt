@@ -1,9 +1,19 @@
-version: 1.2.1
-release_date: 2026-08-27
-summary: 店舗カード表示文字数修正
+version: 1.2.2
+release_date: 2026-09-04
+summary: ズームボタン有効化など
 
 changes:
-  - .bottom-title（1行目=店名）に padding-right: 26px（フォントサイズと同じ＝全角1文字分）を追加しました。これにより1行目の折り返し幅が全角1文字分狭くなり、拡大済みの閉じるボタン（30px幅）と重ならなくなります。box-sizing: border-box も付けているので、要素全体の幅は変わらず内側の余白としてのみ効きます。
+  - app.js: zoomControl: false → zoomControl: true に変更。Google Maps標準のズーム＋／ーボタンが右下に表示されます。
+style.css: .button-area を right: 10px → left: 10px に変更（bottom: 85px は維持）。現在地ボタン・再読み込みボタンが左下に移動し、標準ズームボタン（右下）と重ならなくなります。
+style.css: .gm-bundled-control, .gm-svpc { display:none !important; } から .gm-bundled-control を除外し、.gm-svpc { display:none !important; } のみ残しました。これによりズームボタンは表示されつつ、ストリートビューのペグマンは引き続き非表示のままです。
+
+renderListView() のリスト項目クリック処理に、お気に入りタブと同じ map.setCenter() + map.setZoom(15) を追加しました。
+
+item.marker は既にマーカーオブジェクトそのものを保持しているので（お気に入り側のように名前でマーカーを検索し直す必要がなく）、item.marker.getPosition() でそのまま中心座標を取得できます。
+
+リストを閉じる
+該当ピン位置へ setCenter + ズームレベル15へ setZoom
+マーカーのclickイベントをトリガーしてカードを開く
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
