@@ -94,6 +94,13 @@
     </button>
   </div>
 
+  <!-- ①独自ズームボタン(＋/－)。Google純正コントロールの代わりに使用。
+       タッチ端末では@media (pointer: coarse)により非表示（ピンチズームを利用） -->
+  <div class="zoom-control-area">
+    <button id="zoomInBtn" class="zoom-btn zoom-in-btn" aria-label="拡大">＋</button>
+    <button id="zoomOutBtn" class="zoom-btn zoom-out-btn" aria-label="縮小">－</button>
+  </div>
+
   <!-- 地図 -->
   <div id="map"></div>
 
