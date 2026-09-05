@@ -137,19 +137,26 @@ function moveToCurrentLocation() {
 /* 地図初期化 */
 window.initMap = function () {
 
-  // ②タッチ操作可能な端末(スマホ等)かどうかを判定。
-  //   タッチ端末はピンチズームができるため、ズームボタンはPCのみ表示する。
-  const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 34.7284, lng: 135.4814 },
     zoom: 11,
     mapTypeControl:    false,
-    zoomControl:       !isTouchDevice,
+    // ①Google純正のズームコントロールには頼らず、独自の.zoom-control-areaに
+    //   置き換えるため、ズーム関連オプションは全てfalseに統一する
+    zoomControl:       false,
     streetViewControl: false,
     fullscreenControl: false,
     panControl:        false,
     rotateControl:     false
+  });
+
+  // ①独自ズームボタン(＋/－)にmap.setZoom(±1)を紐付け。
+  //   ボタン自体はCSSの@media (pointer: coarse)でタッチ端末では非表示になる
+  document.getElementById("zoomInBtn").addEventListener("click", () => {
+    map.setZoom(map.getZoom() + 1);
+  });
+  document.getElementById("zoomOutBtn").addEventListener("click", () => {
+    map.setZoom(map.getZoom() - 1);
   });
 
   let allShops       = [];

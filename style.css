@@ -100,7 +100,7 @@ html.is-standalone #map {
 .button-area {
   position: absolute;
   bottom: 85px;
-  left: 10px;
+  right: 10px;
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -160,11 +160,57 @@ button {
   box-shadow: 0 1px 3px rgba(0,0,0,.15);
 }
 
-/* ①ストリートビュー(ペグマン)のみ非表示。
-   ズームコントロール(.gm-bundled-control)はzoomControl: trueで
-   表示するため、ここでは対象から除外する */
-.gm-svpc {
+/* ①ストリートビュー(ペグマン)・ズームコントロール一式ともに常時非表示。
+   Google純正のズームボタンには廃止済みのpanControlの影響などで
+   意図せず方向パッドが混ざり込む可能性があるため、Google純正コントロールには
+   一切頼らず、独自の.zoom-control-areaに置き換える。 */
+.gm-svpc,
+.gm-bundled-control {
   display: none !important;
+}
+
+/* ①独自ズームボタン(＋/－)。Google純正コントロールが表示されていた
+   右上部と同じ位置に配置する */
+.zoom-control-area {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+
+.zoom-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: white;
+  color: #333;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.zoom-btn:active {
+  background: #f2f2f2;
+}
+
+/* ①②タッチ操作端末(スマホ・タブレット)ではピンチズームが使えるため、
+   独自ズームボタンは非表示にする（ブラウザが直接判定するため確実） */
+@media (pointer: coarse) {
+  .zoom-control-area {
+    display: none !important;
+  }
 }
 
 /* Google InfoWindow */
