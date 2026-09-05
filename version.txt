@@ -1,37 +1,11 @@
-version: 1.2.4
+version: 1.2.5
 release_date: 2026-09-05
-summary: Google標準ボタンなど修正
+summary: ズームボタン修正
 
 changes:
-  - タッチ操作で方向パッド・ズームボタンとも非表示（CSSで二重に制御）
-@media (pointer: coarse) { .gm-bundled-control { display: none !important; } } を追加。これによりタッチ操作端末ではJSのタイミングやキャッシュに関係なく、ブラウザ側の判定で確実にズームボタンの入れ物ごと非表示になります（.gm-svpcによるペグマン非表示は常時維持）。
+  - #mapはposition: relativeではないため、.zoom-control-areaの絶対配置はページ全体（body）基準になり、ヘッダー直下に表示されていました。
 
-② マウス操作でズームボタンのみ表示
-zoomControl: !isTouchDevice はそのまま維持。PCはpointer: coarseにマッチしないためCSS側のルールも適用されず、JS側の判定通りズームボタンが表示されます。
-
-③ ボタン配置の入れ替え
-
-.button-area を right: 10px に戻し、現在地・再読み込みボタンを右下に復帰
-zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP } を追加し、ズームボタンを右上部に配置
-これで右下＝現在地・再読み込みボタン、右上＝ズームボタンと上下に分かれ、衝突しなくなります。
-
-テスト段階でボタン重複の不具合あり
-
-index.html
-.button-area の直後に .zoom-control-area（＋/－ボタン）を新規追加。
-
-style.css
-
-.gm-bundled-control を .gm-svpc と合わせて無条件で display: none !important に変更（Google純正コントロールは常時非表示）
-.zoom-control-area を新規追加。旧Googleコントロールと同じ右上部(top:10px; right:10px)に配置し、白背景の角丸2ボタンスタイルに
-@media (pointer: coarse) で .zoom-control-area 自体をタッチ端末では非表示に（ピンチズームを利用）
-
-app.js
-
-zoomControl、panControl、rotateControl を全てfalseに統一し、Google純正コントロールに一切頼らない構成に変更
-zoomInBtn / zoomOutBtn のクリックにそれぞれ map.setZoom(map.getZoom() + 1) / map.setZoom(map.getZoom() - 1) を紐付け
-
-これでGoogle Maps側の挙動（バージョン更新等）に左右されず、方向パッドが混ざり込む可能性を完全に排除しつつ、PCではボタンで、スマホではピンチでズームできる構成になっています。
+#mapのmargin-top（ヘッダー＋検索バー分の112px + env(safe-area-inset-top)）と同じ値をtopに加算し、そこからさらに10px内側に入れることで、見た目上は地図の右上角に来るよう修正しました。.button-area（現在地・再読み込みボタン）はbottom基準のため元々この問題は起きていません。
 
 notes:
   - 本番環境（Firebase Hosting）へのデプロイ
