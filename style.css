@@ -169,11 +169,12 @@ button {
   display: none !important;
 }
 
-/* ①独自ズームボタン(＋/－)。Google純正コントロールが表示されていた
-   右上部と同じ位置に配置する */
+/* ①独自ズームボタン(＋/－)。#mapがposition:relativeではないため、
+   絶対配置の基準はページ(body)側になる。#mapのmargin-top(ヘッダー+検索バー分)
+   と同じだけオフセットすることで、見た目上は地図の右上角に配置する */
 .zoom-control-area {
   position: absolute;
-  top: 10px;
+  top: calc(112px + env(safe-area-inset-top, 0px) + 10px);
   right: 10px;
   z-index: 999;
   display: flex;
